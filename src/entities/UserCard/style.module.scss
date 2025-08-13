@@ -1,0 +1,32 @@
+.user__card {
+  width: 247px;
+  height: 64px;
+  background-color: #242f43;
+  padding: 12px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 12px;
+
+  .user {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(to bottom, #3b82f6, #14b8a6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .name__description {
+    span {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .description {
+      color: #647479;
+    }
+  }
+}

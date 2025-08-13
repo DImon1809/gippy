@@ -1,0 +1,50 @@
+.sidebar {
+  width: 280px;
+  min-height: 100vh;
+  background-color: #151f31;
+  display: flex;
+  flex-direction: column;
+
+  .logo__container {
+    height: 94px;
+    background-color: #172133;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    display: flex;
+    align-items: center;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: 20px;
+    }
+
+    .logo__context {
+      h1 {
+        font-size: 18px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #647479;
+      }
+    }
+  }
+
+  .items__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    flex: 1;
+  }
+
+  .user__card__wrapper {
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #fff;
+  }
+}
