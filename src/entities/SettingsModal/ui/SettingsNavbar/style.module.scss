@@ -1,0 +1,42 @@
+.settings__navbar {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  position: relative;
+
+  .navbar__item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #242f43;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+
+    &.dark {
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 640px) {
+      cursor: default;
+    }
+
+    &.active {
+      color: #3b82f6;
+      background-color: rgba(51, 65, 85, 0.04);
+    }
+
+    &.dark.active {
+      color: #3b82f6;
+      background-color: rgba(51, 65, 85, 0.2);
+    }
+  }
+
+  .indicator {
+    background-color: #3b82f6;
+    position: absolute;
+    height: 2px;
+    bottom: 0;
+    transition: all 0.3s ease;
+  }
+}

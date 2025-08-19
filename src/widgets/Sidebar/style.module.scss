@@ -1,17 +1,26 @@
 .sidebar {
-  width: 280px;
+  min-width: 280px;
   min-height: 100vh;
-  background-color: #151f31;
+  background-color: #fbfcfd;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  &.dark {
+    background-color: #151f31;
+    box-shadow: none;
+  }
 
   .logo__container {
     height: 94px;
-    background-color: #172133;
-    border-bottom: 1px solid #fff;
-    color: #fff;
+    background-color: #fbfcfd;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.3);
     display: flex;
     align-items: center;
+
+    &.dark {
+      background-color: #172133;
+    }
 
     .logo {
       display: flex;
@@ -21,12 +30,21 @@
     }
 
     .logo__context {
-      h1 {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .app__name {
         font-size: 18px;
+        color: #1e293b;
+
+        &.dark {
+          color: #fff;
+        }
       }
 
       p {
-        font-size: 14px;
+        font-size: 12px;
         color: #647479;
       }
     }
@@ -36,7 +54,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 24px;
+    margin: 24px 0;
     flex: 1;
   }
 
@@ -45,6 +63,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid #fff;
+    border-top: 1px solid rgba(203, 213, 225, 0.3);
   }
 }

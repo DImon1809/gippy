@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 
 import { SettingsModal } from "@/entities/SettingsModal";
 
-// import styles from "./style.module.scss";
+import styles from "./style.module.scss";
 
 const modalsMap = {
   settings: SettingsModal,
@@ -17,12 +17,15 @@ type ModalProviderState<T extends ModalsType | null> = {
   isOpen: boolean;
 };
 
-const ModalContext = React.createContext<{
+// eslint-disable-next-line react-refresh/only-export-components
+export const ModalContext = React.createContext<{
   modalType: ModalsType | null;
   openModal: OpenModal;
+  closeModal: () => void;
 }>({
   modalType: null,
   openModal: () => undefined,
+  closeModal: () => undefined,
 });
 
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
@@ -52,9 +55,20 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   }, [setState]);
 
   return (
-    <ModalContext.Provider value={{ modalType: state.type, openModal }}>
-      {state.isOpen && Component && <Component closeModal={closeModal} />}
-      {state.isOpen && <div onClick={() => closeModal()}></div>}
+    <ModalContext.Provider
+      value={{ modalType: state.type, openModal, closeModal }}
+    >
+      {state.isOpen && Component && (
+        <div className={styles.modal}>
+          <Component closeModal={closeModal} />
+        </div>
+      )}
+      {state.isOpen && (
+        <div
+          className={styles.global__wrapper}
+          onClick={() => closeModal()}
+        ></div>
+      )}
       <main>{children}</main>
     </ModalContext.Provider>
   );

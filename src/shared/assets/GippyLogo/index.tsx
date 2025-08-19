@@ -1,13 +1,27 @@
-import React from "react";
+import { useContext } from "react";
+
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 
 import styles from "./style.module.scss";
 
-export const GippyLogo = () => {
+type Props = {
+  size?: number;
+};
+
+export const GippyLogo = ({ size = 41 }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <div className={styles.gippy__logo}>
+    <div
+      style={{
+        width: `${size + 5}px`,
+        height: `${size + 5}px`,
+      }}
+      className={`${styles.gippy__logo} ${theme === "dark" ? styles.dark : ""}`}
+    >
       <svg
-        width={41}
-        height={41}
+        width={size}
+        height={size}
         viewBox="0 0 100 70"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +32,7 @@ export const GippyLogo = () => {
           cy="8"
           r="3"
           fill="none"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="2.5"
         />
         <line
@@ -26,7 +40,7 @@ export const GippyLogo = () => {
           y1="11"
           x2="50"
           y2="20"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="3"
           strokeLinecap="round"
         />
@@ -39,7 +53,7 @@ export const GippyLogo = () => {
           height="44"
           rx="8"
           fill="none"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="3.5"
         />
 
@@ -49,7 +63,7 @@ export const GippyLogo = () => {
           cy="38"
           r="10"
           fill="none"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="3"
         />
         <circle
@@ -57,7 +71,7 @@ export const GippyLogo = () => {
           cy="38"
           r="10"
           fill="none"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="3"
         />
 
@@ -67,19 +81,19 @@ export const GippyLogo = () => {
           y1="38"
           x2="52"
           y2="38"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="2.5"
           strokeLinecap="round"
         />
 
         {/* Зрачки */}
-        <circle cx="38" cy="38" r="4" fill="#fff" />
-        <circle cx="62" cy="38" r="4" fill="#fff" />
+        <circle cx="38" cy="38" r="4" fill={theme === "dark" ? "#fff" : "#1e293b"} />
+        <circle cx="62" cy="38" r="4" fill={theme === "dark" ? "#fff" : "#1e293b"} />
 
         {/* Улыбка */}
         <path
           d="M 35 52 Q 50 58 65 52"
-          stroke="#fff"
+          stroke={theme === "dark" ? "#fff" : "#1e293b"}
           strokeWidth="3"
           fill="none"
           strokeLinecap="round"

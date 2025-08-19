@@ -1,13 +1,18 @@
 .user__card {
   width: 247px;
   height: 64px;
-  background-color: #242f43;
+  background-color: #f3f6fa;
   padding: 12px;
-  color: #fff;
+  color: #242f43;
   display: flex;
   align-items: center;
   gap: 12px;
   border-radius: 12px;
+
+  &.dark {
+    background-color: #242f43;
+    color: #fff;
+  }
 
   .user {
     width: 40px;
@@ -20,13 +25,21 @@
   }
 
   .name__description {
+    display: flex;
+    flex-direction: column;
+
     span {
       font-weight: 500;
       font-size: 14px;
     }
 
     .description {
-      color: #647479;
+      font-size: 12px;
+      color: #76b2e1;
+
+      &.dark {
+        color: #647479;
+      }
     }
   }
 }

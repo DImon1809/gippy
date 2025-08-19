@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useContext } from "react";
 import {
   Headphones,
   MessageCircle,
@@ -10,6 +9,7 @@ import {
   Wallet,
 } from "lucide-react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { UserCard } from "@/entities/UserCard";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 
@@ -25,69 +25,79 @@ interface NavigationItem {
   description: string;
 }
 
-export const Sidebar = () => {
-  const [isBarItemActive, setIsBarItemActive] = useState<boolean>(false);
+const navigationItems: NavigationItem[] = [
+  {
+    id: "chat",
+    name: "AI Chat",
+    icon: MessageCircle,
+    href: "/chat",
+    description: "Chat with Gippy for crypto",
+  },
+  {
+    id: "wallet",
+    name: "Wallet",
+    icon: Wallet,
+    href: "/wallet",
+    description: "Tottal crypto asset balance",
+  },
+  {
+    id: "transactions",
+    name: "Transactions",
+    icon: Receipt,
+    href: "/transactions",
+    description: "All wallet transactions",
+  },
+  {
+    id: "contacts",
+    name: "Contacts",
+    icon: Users,
+    href: "/contacts",
+    description: "Contact graph with name",
+  },
+  {
+    id: "positions",
+    name: "Positions",
+    icon: TrendingUp,
+    href: "/positions",
+    description: "Open lending positions",
+  },
+  {
+    id: "support",
+    name: "Support",
+    icon: Headphones,
+    href: "/support",
+    description: "Contact options",
+  },
+  {
+    id: "settings",
+    name: "Settings",
+    icon: Settings,
+    href: "/settings",
+    description: "System appearance",
+  },
+];
 
-  const navigationItems: NavigationItem[] = [
-    {
-      id: "chat",
-      name: "AI Chat",
-      icon: MessageCircle,
-      href: "/chat",
-      description: "Chat with Gippy for crypto",
-    },
-    {
-      id: "wallet",
-      name: "Wallet",
-      icon: Wallet,
-      href: "/wallet",
-      description: "Tottal crypto asset balance",
-    },
-    {
-      id: "transactions",
-      name: "Transactions",
-      icon: Receipt,
-      href: "/transactions",
-      description: "All wallet transactions",
-    },
-    {
-      id: "contacts",
-      name: "Contacts",
-      icon: Users,
-      href: "/contacts",
-      description: "Contact graph with name",
-    },
-    {
-      id: "positions",
-      name: "Positions",
-      icon: TrendingUp,
-      href: "/positions",
-      description: "Open lending positions",
-    },
-    {
-      id: "support",
-      name: "Support",
-      icon: Headphones,
-      href: "/support",
-      description: "Contact options",
-    },
-    {
-      id: "settings",
-      name: "Settings",
-      icon: Settings,
-      href: "/settings",
-      description: "System appearance",
-    },
-  ];
+export const Sidebar = () => {
+  const { theme } = useContext(ThemeContext);
 
   return (
-    <nav className={styles.sidebar}>
-      <div className={styles.logo__container}>
+    <nav className={`${styles.sidebar} ${theme === "dark" ? styles.dark : ""}`}>
+      <div
+        className={`${styles.logo__container}  ${
+          theme === "dark" ? styles.dark : ""
+        }`}
+      >
         <div className={styles.logo}>
           <GippyLogo />
           <div className={styles.logo__context}>
             <div>
-              <h1>Gippy</h1>
+              <h1
+                className={`${styles.app__name} ${
+                  theme === "dark" ? styles.dark : ""
+                }`}
+              >
+                Gippy
+              </h1>
             </div>
             <div>
               <p>AI Assistant</p>

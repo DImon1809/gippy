@@ -1,0 +1,28 @@
+.xbutton {
+  width: 36px;
+  height: 36px;
+  color: #cbd5e1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      border-radius: 12px;
+      background-color: rgb(54, 71, 94);
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active {
+    border-radius: 12px;
+    background-color: rgb(54, 71, 94);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    cursor: default;
+  }
+}

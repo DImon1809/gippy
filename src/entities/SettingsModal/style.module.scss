@@ -1,0 +1,77 @@
+.settings__modal {
+  width: 766px;
+  height: 498px;
+  background-color: #fff;
+  border-radius: 12px;
+  //   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  &.dark {
+    background-color: #0f172a;
+  }
+
+  header {
+    height: 85px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+
+    .settings__title {
+      color: #0f172a;
+      font-size: 24px;
+      font-weight: bold;
+
+      &.dark {
+        color: #fff;
+      }
+    }
+  }
+
+  .settings__content {
+    padding: 32px;
+  }
+
+  .content__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    .content__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .content__row__title {
+      color: #0f172a;
+      font-size: 18px;
+      font-weight: 500;
+
+      &.dark {
+        color: #fff;
+      }
+    }
+  }
+
+  .promising__inscription {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.dark {
+      h3 {
+        color: #cbd5e1;
+      }
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 400;
+      color: #0f172a;
+    }
+  }
+}
