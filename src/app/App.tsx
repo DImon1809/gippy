@@ -1,5 +1,6 @@
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import { Root } from "@/app/Root";
 
@@ -14,6 +15,7 @@ export const App = () => {
         <ModalProvider>
           <Provider store={store}>
             <Root />
+            <ToastContainer />
           </Provider>
         </ModalProvider>
       </ThemeProvider>

@@ -1,4 +1,80 @@
 .header {
   height: 98px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .logo__content__wrapper {
+    display: flex;
+
+    .content__wrapper {
+      margin-left: 16px;
+
+      h2 {
+        font-size: 20px;
+      }
+
+      span {
+        font-size: 14px;
+        color: #647479;
+      }
+    }
+  }
+
+  .connect__button {
+    width: 160px;
+    height: 38px;
+    background-image: linear-gradient(to right, #3b82f6, #14b8a6);
+    color: #ffffff;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    box-shadow: 0 4px 6px -1px rgba(96, 165, 250, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &.connect {
+      background-image: none;
+      background-color: #6c7c92;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        scale: 1.05;
+        box-shadow: 0 4px 6px 2px rgba(96, 165, 250, 0.2);
+      }
+
+      @media (max-width: 640px) {
+        cursor: default;
+      }
+    }
+
+    .text__button {
+      margin-bottom: 4px;
+
+      span {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 4px dotted #fff;
+      animation: rotate infinite linear 2s;
+    }
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }

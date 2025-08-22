@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { createContext, useEffect, useState } from "react";
 
-import type { Theme } from "@/shared/api/types";
+import type { Theme } from "@/shared/lib/types";
 
 type ThemeContextType = {
   theme: Theme | null;
@@ -31,7 +31,7 @@ export const ThemeProvider = ({ children }: Props) => {
   }, [theme]);
 
   const toggleTheme = () => {
-    setThemeState((prev) => (prev === "light" ? "dark" : "light"));
+    setThemeState(prev => (prev === "light" ? "dark" : "light"));
   };
 
   const setTheme = (newTheme: Theme) => {

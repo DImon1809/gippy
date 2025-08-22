@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import { SIGN_MESSAGE } from "../../config";
@@ -12,6 +12,7 @@ interface WalletState {
   userName: string | null;
 }
 
+// TODO Переделать
 const getUserNames = (): { [address: string]: string } => {
   try {
     const stored = localStorage.getItem("userNames");
@@ -66,7 +67,7 @@ export const useWallet = () => {
   const checkIfWalletIsConnected = useCallback(async () => {
     try {
       if (!window.ethereum) {
-        setWalletState((prev) => ({
+        setWalletState(prev => ({
           ...prev,
           error: "MetaMask не установлен",
         }));
@@ -81,7 +82,7 @@ export const useWallet = () => {
         // Мигрируем старое имя, если оно есть
         migrateOldUserName(address);
         const storedName = getUserName(address);
-        setWalletState((prev) => ({
+        setWalletState(prev => ({
           ...prev,
           address: address,
           isConnected: true,
@@ -91,7 +92,7 @@ export const useWallet = () => {
       }
     } catch (error) {
       console.error("Ошибка при проверке подключения:", error);
-      setWalletState((prev) => ({
+      setWalletState(prev => ({
         ...prev,
         error: "Ошибка при проверке подключения",
       }));
@@ -101,14 +102,14 @@ export const useWallet = () => {
   const connectWallet = useCallback(async () => {
     try {
       if (!window?.ethereum) {
-        setWalletState((prev) => ({
+        setWalletState(prev => ({
           ...prev,
           error: "MetaMask не установлен",
         }));
         return;
       }
 
-      setWalletState((prev) => ({ ...prev, isConnecting: true, error: null }));
+      setWalletState(prev => ({ ...prev, isConnecting: true, error: null }));
 
       // Запрашиваем подключение к кошельку
       const accounts = await window.ethereum.request({
@@ -155,7 +156,7 @@ export const useWallet = () => {
       }
     } catch (error: any) {
       console.error("Ошибка при подключении кошелька:", error);
-      setWalletState((prev) => ({
+      setWalletState(prev => ({
         ...prev,
         isConnecting: false,
         error: error.message || "Ошибка при подключении кошелька",
@@ -171,17 +172,17 @@ export const useWallet = () => {
       // Сохраняем имя для текущего адреса
       saveUserName(currentAddress, name);
 
-      setWalletState((prev) => ({
+      setWalletState(prev => ({
         ...prev,
         showNameModal: false,
         userName: name,
       }));
     },
-    [walletState.address]
+    [walletState.address],
   );
 
   const closeNameModal = useCallback(() => {
-    setWalletState((prev) => ({
+    setWalletState(prev => ({
       ...prev,
       showNameModal: false,
     }));
@@ -224,10 +225,7 @@ export const useWallet = () => {
       }
 
       // Проверяем подпись
-      const recoveredAddress = ethers.verifyMessage(
-        SIGN_MESSAGE,
-        storedSignature
-      );
+      const recoveredAddress = ethers.verifyMessage(SIGN_MESSAGE, storedSignature);
 
       if (recoveredAddress.toLowerCase() === storedAddress.toLowerCase()) {
         // Мигрируем старое имя, если оно есть
@@ -253,6 +251,8 @@ export const useWallet = () => {
       return false;
     }
   }, [disconnectWallet]);
+
+  useEffect(() => {}, []);
 
   return {
     ...walletState,

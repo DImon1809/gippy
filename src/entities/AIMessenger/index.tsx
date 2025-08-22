@@ -1,20 +1,26 @@
 import { useEffect, useRef, useState } from "react";
-import { Mic } from "lucide-react";
+import { toast } from "react-toastify";
+import { Mic, Send } from "lucide-react";
 
 import { useSendMyMessageMutation } from "@/features/message/messageApi";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 import { UserLogo } from "@/shared/assets/UserLogo";
 import type { Message } from "@/shared/config/Message";
+import { useWallet } from "@/shared/lib/hooks/useWallet";
 
 import { TypingMessage } from "./ui/TypingMessage";
 
 import styles from "./style.module.scss";
 
 export const AIMessenger = () => {
+  const { address } = useWallet();
+
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const [isDone, setIsDone] = useState<boolean>(false);
+  const [isAnimateSendButton, setIsAnimateSendButton] = useState<boolean>(false);
+  const [isSendButton, setIsSendButton] = useState<boolean>(false);
   const [myMessage, setMyMessage] = useState("");
   const [displayedText, setDisplayedText] = useState("");
   const [allMessages, setAllMessages] = useState<Message[]>([
@@ -35,6 +41,19 @@ export const AIMessenger = () => {
     try {
       if (!myMessage.trim()) return;
 
+      if (!address) {
+        return toast.warning("Пожалуйста, подключите крипто-кошелёк", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+
       const copyMessage = JSON.parse(JSON.stringify(myMessage));
       setMyMessage("");
       setIsDone(false);
@@ -49,7 +68,7 @@ export const AIMessenger = () => {
         },
       ]);
 
-      await sendMyMessage({ query: copyMessage }).unwrap();
+      await sendMyMessage({ query: copyMessage, session_id: address }).unwrap();
     } catch (err) {
       console.error(err);
     }
@@ -88,6 +107,37 @@ export const AIMessenger = () => {
   useEffect(() => {
     scrollToBottom();
   }, [displayedText]);
+
+  useEffect(() => {
+    if (isSendButton && !isAnimateSendButton) {
+      const timer = setTimeout(() => {
+        console.log("send1");
+        setIsAnimateSendButton(true);
+        console.log("send2");
+      }, 200);
+
+      console.log("work2");
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSendButton, isAnimateSendButton]);
+
+  useEffect(() => {
+    if (!myMessage) {
+      setIsAnimateSendButton(false);
+
+      const timer = setTimeout(() => {
+        setIsSendButton(false);
+      }, 200);
+
+      return () => clearTimeout(timer);
+    }
+
+    if (myMessage) setIsSendButton(true);
+  }, [myMessage]);
+
+  console.log("isSendButton", isSendButton);
+  console.log("isAnimateSendButton", isAnimateSendButton);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -165,9 +215,18 @@ export const AIMessenger = () => {
             className={styles.textarea}
             rows={1}
           />
-          <button>
+
+          {!!isSendButton && (
+            <div
+              className={`${styles.send__button__wrapper} ${isAnimateSendButton && styles.visible}`}
+            >
+              <Send color="#fff" size={19} />
+            </div>
+          )}
+
+          <div className={styles.microphone__wrapper}>
             <Mic />
-          </button>
+          </div>
         </div>
       </div>
     </section>

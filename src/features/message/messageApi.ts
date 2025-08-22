@@ -9,14 +9,14 @@ const messageApi = serviceApi.injectEndpoints({
         status: string;
         timestamp: string;
       },
-      { query: string }
+      { query: string; session_id: string }
     >({
-      query: ({ query }) => ({
+      query: ({ query, session_id }) => ({
         url: "/query",
         method: "post",
         body: {
           query,
-          session_id: "0xfaff5bf2571ab509ad8165fa56e72dd3d9680a50",
+          session_id,
         },
       }),
     }),

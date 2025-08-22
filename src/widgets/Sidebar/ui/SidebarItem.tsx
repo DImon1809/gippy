@@ -14,8 +14,6 @@ type Props = {
 export const SidebarItem = ({ Icon, name, description }: Props) => {
   const { theme } = useContext(ThemeContext);
 
-  console.log("theme", theme);
-
   const { openModal } = React.useContext(ModalContext);
 
   const handleClick = () => {

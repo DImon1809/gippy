@@ -3,7 +3,7 @@ import React, { type ChangeEvent, useContext, useState } from "react";
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { XButton } from "@/shared";
-import type { Theme } from "@/shared/api/types";
+import type { Theme } from "@/shared/lib/types";
 
 import { ParamSelector } from "./ui/ParamSelector";
 import { SettingsNavbar } from "./ui/SettingsNavbar";
@@ -25,18 +25,10 @@ export const SettingsModal = () => {
   };
 
   return (
-    <section
-      className={`${styles.settings__modal} ${
-        theme === "dark" ? styles.dark : ""
-      }`}
-    >
+    <section className={`${styles.settings__modal} ${theme === "dark" ? styles.dark : ""}`}>
       <header>
         <div>
-          <h2
-            className={`${styles.settings__title} ${
-              theme === "dark" ? styles.dark : ""
-            }`}
-          >
+          <h2 className={`${styles.settings__title} ${theme === "dark" ? styles.dark : ""}`}>
             Settings
           </h2>
         </div>
@@ -51,9 +43,7 @@ export const SettingsModal = () => {
             <div className={styles.content__row}>
               <div>
                 <h3
-                  className={`${styles.content__row__title} ${
-                    theme === "dark" ? styles.dark : ""
-                  }`}
+                  className={`${styles.content__row__title} ${theme === "dark" ? styles.dark : ""}`}
                 >
                   Language
                 </h3>
@@ -63,30 +53,22 @@ export const SettingsModal = () => {
             <div className={styles.content__row}>
               <div>
                 <h3
-                  className={`${styles.content__row__title} ${
-                    theme === "dark" ? styles.dark : ""
-                  }`}
+                  className={`${styles.content__row__title} ${theme === "dark" ? styles.dark : ""}`}
                 >
                   Theme
                 </h3>
               </div>
               <ParamSelector
-                options={
-                  theme === "dark" ? ["Dark", "Light"] : ["Light", "Dark"]
-                }
+                options={theme === "dark" ? ["Dark", "Light"] : ["Light", "Dark"]}
                 handleChange={handleChangeTheme}
               />
             </div>
           </div>
         ) : (
           <div
-            className={`${styles.promising__inscription} ${
-              theme === "dark" ? styles.dark : ""
-            }`}
+            className={`${styles.promising__inscription} ${theme === "dark" ? styles.dark : ""}`}
           >
-            <h3>{`${
-              direction === "Profile" ? "Profile" : "About"
-            } settings coming soon...`}</h3>
+            <h3>{`${direction === "Profile" ? "Profile" : "About"} settings coming soon...`}</h3>
           </div>
         )}
       </div>
