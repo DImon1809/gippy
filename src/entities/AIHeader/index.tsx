@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Wallet } from "lucide-react";
 import { LogOut, User } from "lucide-react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 import { useWallet } from "@/shared/lib/hooks/useWallet";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
@@ -9,6 +10,7 @@ import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 import styles from "./style.module.scss";
 
 export const AIHeader = () => {
+  const { theme, setTheme } = useContext(ThemeContext);
   // const {
   //   isConnected,
   //   isConnecting,
@@ -36,17 +38,27 @@ export const AIHeader = () => {
   };
 
   return (
-    <header className={styles.header}>
+    <header
+      className={`${styles.header} ${theme === "dark" ? styles.dark : ""}
+    `}
+    >
       <div className={styles.logo__content__wrapper}>
         <GippyLogo />
         <div className={styles.content__wrapper}>
           <h2>AI Chat с Gippy</h2>
-          <span>Ваш персональный AI ассистент</span>
+          <span
+            className={`${styles.text} ${theme === "dark" ? styles.dark : ""}
+    `}
+          >
+            Ваш персональный AI ассистент
+          </span>
         </div>
       </div>
 
       <div
-        className={`${styles.connect__button} ${isConnect && styles.connect}`}
+        className={`${styles.connect__button} ${isConnect && styles.connect} ${
+          theme === "dark" ? styles.dark : ""
+        }`}
         onClick={handleButton}
       >
         {isConnecting ? (

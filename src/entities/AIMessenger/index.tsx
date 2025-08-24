@@ -2,18 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Mic, Send } from "lucide-react";
 
+import { useAppSelector } from "@/app/store";
 import { useSendMyMessageMutation } from "@/features/message/messageApi";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 import { UserLogo } from "@/shared/assets/UserLogo";
 import type { Message } from "@/shared/config/Message";
 import { useWallet } from "@/shared/lib/hooks/useWallet";
+import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import { TypingMessage } from "./ui/TypingMessage";
 
 import styles from "./style.module.scss";
 
 export const AIMessenger = () => {
-  const { address } = useWallet();
+  // const { address } = useWallet();
+  // const { address } = useWallet2();
+
+  const { address } = useAppSelector(state => state.walletSlice);
+
+  console.log("address1", address);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -40,6 +47,8 @@ export const AIMessenger = () => {
   const handleSendMessage = async () => {
     try {
       if (!myMessage.trim()) return;
+
+      console.log("address", address);
 
       if (!address) {
         return toast.warning("Пожалуйста, подключите крипто-кошелёк", {
@@ -219,6 +228,7 @@ export const AIMessenger = () => {
           {!!isSendButton && (
             <div
               className={`${styles.send__button__wrapper} ${isAnimateSendButton && styles.visible}`}
+              onClick={handleSendMessage}
             >
               <Send color="#fff" size={19} />
             </div>

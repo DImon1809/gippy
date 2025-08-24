@@ -3,7 +3,8 @@
   position: relative;
 
   .chat {
-    max-height: 80vh;
+    // max-height: 80vh;
+    max-height: calc(calc(1vw + 1vh) * 20);
     overflow-y: auto;
 
     .message__wrapper {

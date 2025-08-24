@@ -82,25 +82,19 @@ export const Sidebar = () => {
 
   return (
     <nav className={`${styles.sidebar} ${theme === "dark" ? styles.dark : ""}`}>
-      <div
-        className={`${styles.logo__container}  ${
-          theme === "dark" ? styles.dark : ""
-        }`}
-      >
+      <div className={`${styles.logo__container}  ${theme === "dark" ? styles.dark : ""}`}>
         <div className={styles.logo}>
           <GippyLogo />
           <div className={styles.logo__context}>
             <div>
-              <h1
-                className={`${styles.app__name} ${
-                  theme === "dark" ? styles.dark : ""
-                }`}
-              >
+              <h1 className={`${styles.app__name} ${theme === "dark" ? styles.dark : ""}`}>
                 Gippy
               </h1>
             </div>
             <div>
-              <p>AI Assistant</p>
+              <p className={`${styles.text} ${theme === "dark" ? styles.dark : ""}`}>
+                AI Assistant
+              </p>
             </div>
           </div>
         </div>
@@ -110,12 +104,7 @@ export const Sidebar = () => {
           const Icon = item.icon;
 
           return (
-            <SidebarItem
-              key={index}
-              Icon={Icon}
-              name={item.name}
-              description={item.description}
-            />
+            <SidebarItem key={index} Icon={Icon} name={item.name} description={item.description} />
           );
         })}
       </div>

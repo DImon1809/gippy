@@ -27,7 +27,7 @@ export const walletSlice = createSlice({
       const data = { ...state, ...action.payload };
       console.log("state", data);
 
-      state = data;
+      Object.assign(state, data);
     },
     resetWalletState: () => initialState,
   },

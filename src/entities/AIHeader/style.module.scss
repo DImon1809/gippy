@@ -6,6 +6,14 @@
   align-items: center;
   justify-content: space-between;
 
+  &.dark {
+    background-color: #101829;
+
+    h2 {
+      color: #fff;
+    }
+  }
+
   .logo__content__wrapper {
     display: flex;
 
@@ -16,9 +24,13 @@
         font-size: 20px;
       }
 
-      span {
+      .text {
         font-size: 14px;
         color: #647479;
+
+        &.dark {
+          color: #a2b5bb;
+        }
       }
     }
   }
@@ -41,6 +53,17 @@
     &.connect {
       background-image: none;
       background-color: #6c7c92;
+    }
+
+    &.dark {
+      background-color: #4c5a6f;
+      box-shadow: none;
+      border: none;
+
+      &:hover {
+        scale: 1.05;
+        box-shadow: none;
+      }
     }
 
     @media (hover: hover) {

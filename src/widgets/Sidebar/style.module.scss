@@ -43,9 +43,13 @@
         }
       }
 
-      p {
+      .text {
         font-size: 12px;
         color: #647479;
+
+        &.dark {
+          color: #a2b5bb;
+        }
       }
     }
   }
