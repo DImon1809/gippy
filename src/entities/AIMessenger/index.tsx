@@ -1,22 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Mic, Send } from "lucide-react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppSelector } from "@/app/store";
 import { useSendMyMessageMutation } from "@/features/message/messageApi";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 import { UserLogo } from "@/shared/assets/UserLogo";
 import type { Message } from "@/shared/config/Message";
-import { useWallet } from "@/shared/lib/hooks/useWallet";
-import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import { TypingMessage } from "./ui/TypingMessage";
 
 import styles from "./style.module.scss";
 
 export const AIMessenger = () => {
-  // const { address } = useWallet();
-  // const { address } = useWallet2();
+  const { theme } = useContext(ThemeContext);
 
   const { address } = useAppSelector(state => state.walletSlice);
 
@@ -154,7 +152,7 @@ export const AIMessenger = () => {
         initialTextareaHeight.current = textareaRef.current.offsetHeight;
       }
 
-      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = "52px";
       const newHeight = Math.min(textareaRef.current.scrollHeight, 200);
       textareaRef.current.style.height = `${newHeight}px`;
 
@@ -166,7 +164,7 @@ export const AIMessenger = () => {
   }, [myMessage]);
 
   return (
-    <section className={styles.AIMessenger}>
+    <section className={`${styles.AIMessenger} ${theme === "dark" ? styles.dark : ""}`}>
       <div className={styles.chat} ref={chatRef}>
         <div>
           {allMessages.map((message, index) => (
@@ -178,10 +176,14 @@ export const AIMessenger = () => {
             >
               <div
                 className={`${styles.message}
-                ${message.type === "ai" ? styles.ai : styles.user}
+                ${
+                  message.type === "ai"
+                    ? `${styles.ai} ${theme === "dark" ? styles.dark : ""}`
+                    : styles.user
+                }
                 `}
               >
-                <span>{message.content}</span>
+                <p>{message.content}</p>
                 <div
                   className={`${styles.sender}
                 ${message.type === "ai" ? styles.ai : styles.user}
@@ -213,7 +215,10 @@ export const AIMessenger = () => {
           )}
         </div>
       </div>
-      <div ref={wrapperRef} className={styles.input__message__wrapper}>
+      <div
+        ref={wrapperRef}
+        className={`${styles.input__message__wrapper} ${theme === "dark" ? styles.dark : ""}`}
+      >
         <div className={styles.input__message}>
           <textarea
             ref={textareaRef}
@@ -221,7 +226,7 @@ export const AIMessenger = () => {
             onChange={e => setMyMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Напишите сообщение..."
-            className={styles.textarea}
+            className={`${styles.textarea} ${theme === "dark" ? styles.dark : ""}`}
             rows={1}
           />
 
@@ -234,7 +239,7 @@ export const AIMessenger = () => {
             </div>
           )}
 
-          <div className={styles.microphone__wrapper}>
+          <div className={`${styles.microphone__wrapper} ${theme === "dark" ? styles.dark : ""}`}>
             <Mic />
           </div>
         </div>

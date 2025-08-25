@@ -1,0 +1,15 @@
+.transactions {
+  width: 100%;
+  background-color: #f2f4f6;
+}
+
+.transactions__header {
+  padding: 30px 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .transactions__title {
+    font-size: 26px;
+  }
+}

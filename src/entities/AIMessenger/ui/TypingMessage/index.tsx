@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import styles from "@/entities/AIMessenger/style.module.scss";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 
@@ -19,6 +20,8 @@ export const TypingMessage = ({
   handleDone,
   setDisplayedText,
 }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
@@ -37,8 +40,8 @@ export const TypingMessage = ({
   }, [text, speed]);
 
   return (
-    <div className={`${styles.message} ${styles.ai}`}>
-      <span>{displayedText}</span>
+    <div className={`${styles.message} ${styles.ai} ${theme === "dark" ? styles.dark : ""}`}>
+      <p>{displayedText}</p>
       <div className={`${styles.sender} ${styles.ai}`}>
         <GippyLogo size={32} />
       </div>

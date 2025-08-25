@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Headphones,
   MessageCircle,
@@ -30,7 +31,7 @@ const navigationItems: NavigationItem[] = [
     id: "chat",
     name: "AI Chat",
     icon: MessageCircle,
-    href: "/chat",
+    href: "/",
     description: "Chat with Gippy for crypto",
   },
   {
@@ -80,6 +81,19 @@ const navigationItems: NavigationItem[] = [
 export const Sidebar = () => {
   const { theme } = useContext(ThemeContext);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [activeButton, setActiveButton] = useState<string>("Chat");
+
+  const navigateForPage = (name: string) => {
+    const href = navigationItems.find(item => item.name === name)?.href || null;
+
+    if (!href) return;
+
+    navigate(href);
+  };
+
   return (
     <nav className={`${styles.sidebar} ${theme === "dark" ? styles.dark : ""}`}>
       <div className={`${styles.logo__container}  ${theme === "dark" ? styles.dark : ""}`}>
@@ -104,7 +118,15 @@ export const Sidebar = () => {
           const Icon = item.icon;
 
           return (
-            <SidebarItem key={index} Icon={Icon} name={item.name} description={item.description} />
+            <SidebarItem
+              key={index}
+              Icon={Icon}
+              name={item.name}
+              description={item.description}
+              isActive={item.href === location.pathname}
+              setActiveButton={setActiveButton}
+              navigateForPage={navigateForPage}
+            />
           );
         })}
       </div>

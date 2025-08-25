@@ -1,0 +1,89 @@
+.transactions__table {
+  width: 1120px;
+  border-collapse: collapse;
+  background-color: #f9fbfc;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+
+  .table__head {
+    td {
+      color: rgb(51 65 85);
+      font-weight: 600;
+    }
+
+    .amount__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+
+      @media (max-width: 640px) {
+        cursor: default;
+      }
+    }
+  }
+
+  .table__body {
+    border-top: 3px solid #f1f5f9;
+
+    td {
+      color: #475569;
+      border-top: 1px solid #f1f5f9;
+      font-weight: 500;
+    }
+  }
+
+  td {
+    padding: 16px 24px;
+    font-size: 14px;
+  }
+
+  .download__wrapper {
+    width: 38px;
+    height: 32px;
+    background-color: #f8fafc;
+    border: 1px solid #b4b4b5;
+    color: #494950;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        color: black;
+        transform: scale(1.01);
+      }
+    }
+
+    @media (max-width: 640px) {
+      cursor: default;
+    }
+  }
+
+  .failed,
+  .success,
+  .pending {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .failed {
+    background-color: #ef4444;
+    box-shadow: rgba(239, 68, 68, 0.6) 0px 0px 8px, rgba(239, 68, 68, 0.6) 0px 0px 16px;
+  }
+
+  .success {
+    background-color: #22c55e;
+    box-shadow: rgba(34, 197, 94, 0.6) 0px 0px 8px, rgba(34, 197, 94, 0.6) 0px 0px 16px;
+  }
+
+  .pending {
+    background-color: #eab308;
+    box-shadow: rgba(234, 179, 8, 0.6) 0px 0px 8px, rgba(234, 179, 8, 0.6) 0px 0px 16px;
+  }
+}

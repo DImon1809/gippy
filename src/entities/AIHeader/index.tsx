@@ -4,26 +4,12 @@ import { LogOut, User } from "lucide-react";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
-import { useWallet } from "@/shared/lib/hooks/useWallet";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import styles from "./style.module.scss";
 
 export const AIHeader = () => {
-  const { theme, setTheme } = useContext(ThemeContext);
-  // const {
-  //   isConnected,
-  //   isConnecting,
-  //   address,
-  //   error,
-  //   showNameModal,
-  //   userName,
-  //   connectWallet,
-  //   disconnectWallet,
-  //   verifyStoredLogin,
-  //   submitUserName,
-  //   closeNameModal,
-  // } = useWallet();
+  const { theme } = useContext(ThemeContext);
 
   const { connectWallet, disconnectWallet, isConnect, isConnecting, address } = useWallet2();
 
