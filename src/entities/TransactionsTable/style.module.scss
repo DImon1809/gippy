@@ -1,5 +1,6 @@
 .transactions__table {
-  width: 1120px;
+  // width: 1120px;
+  width: 96%;
   border-collapse: collapse;
   background-color: #f9fbfc;
   border-radius: 12px;
@@ -22,6 +23,10 @@
         cursor: default;
       }
     }
+
+    .status {
+      text-align: center;
+    }
   }
 
   .table__body {
@@ -31,6 +36,7 @@
       color: #475569;
       border-top: 1px solid #f1f5f9;
       font-weight: 500;
+      width: 20%;
     }
   }
 
@@ -70,6 +76,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
+    margin: 0 auto;
   }
 
   .failed {

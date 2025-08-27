@@ -124,7 +124,9 @@ export const TransactionsTable = () => {
           {headers.map((head, i) => (
             <td
               key={i}
-              className={`${head === "Amount" && styles.amount__wrapper}`}
+              className={`${head === "Amount" && styles.amount__wrapper} ${
+                head === "Status" && styles.status
+              }`}
               onClick={hanldeSort}
             >
               {head}{" "}

@@ -1,0 +1,31 @@
+.support__dashboard {
+  width: 100%;
+  background-color: #f2f4f6;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+
+  .support__header {
+    width: 1080px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .support__title {
+    font-size: 36px;
+  }
+
+  .support__description {
+    font-size: 18px;
+    color: #64748b;
+  }
+
+  .stats__wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+}

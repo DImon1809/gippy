@@ -1,0 +1,48 @@
+.balance__card {
+  width: 346px;
+  padding: 24px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  position: relative;
+
+  .content__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card__title {
+    font-size: 14px;
+    color: #475569;
+  }
+
+  .balance__value {
+    font-size: 24px;
+  }
+
+  .balance__change {
+    padding: 4px 6px;
+    border-radius: 16px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.plus {
+      background-color: #dcfce7;
+      color: #008000;
+    }
+
+    &.minus {
+      background-color: #fee2e2;
+      color: #c41515;
+    }
+
+    span {
+      font-size: 12px;
+    }
+  }
+}

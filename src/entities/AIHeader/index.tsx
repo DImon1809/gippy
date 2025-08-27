@@ -52,16 +52,16 @@ export const AIHeader = () => {
         ) : isConnect ? (
           <>
             <User size={16} />
-            <div className={styles.text__button}>
-              <span>{currentAddress}</span>
+            <div className={styles.text__button__wrapper}>
+              <span className={styles.text__button}>{currentAddress}</span>
             </div>
             <LogOut size={16} />
           </>
         ) : (
           <>
             <Wallet size={16} />
-            <div className={styles.text__button}>
-              <span>Connect Wallet</span>
+            <div className={styles.text__button__wrapper}>
+              <span className={styles.text__button}>Connect Wallet</span>
             </div>
           </>
         )}

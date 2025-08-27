@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Headphones,
@@ -84,8 +84,6 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeButton, setActiveButton] = useState<string>("Chat");
-
   const navigateForPage = (name: string) => {
     const href = navigationItems.find(item => item.name === name)?.href || null;
 
@@ -124,7 +122,6 @@ export const Sidebar = () => {
               name={item.name}
               description={item.description}
               isActive={item.href === location.pathname}
-              setActiveButton={setActiveButton}
               navigateForPage={navigateForPage}
             />
           );

@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { AIChat } from "@/pages/AIChat";
 import { NotFound } from "@/pages/NotFound";
+import { Support } from "@/pages/Support";
 import { Transactions } from "@/pages/Transactions";
 import { Sidebar } from "@/widgets/Sidebar";
 
@@ -16,6 +17,7 @@ export const Root = () => {
         <Routes>
           <Route path="/" element={<AIChat />} />
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/support" element={<Support />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

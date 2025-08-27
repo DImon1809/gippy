@@ -1,4 +1,4 @@
-import type { ComponentType, Dispatch, SetStateAction } from "react";
+import type { ComponentType } from "react";
 import React, { useContext } from "react";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
@@ -11,18 +11,10 @@ type Props = {
   name: string;
   description: string;
   isActive: boolean;
-  setActiveButton: Dispatch<SetStateAction<string>>;
   navigateForPage: (name: string) => void;
 };
 
-export const SidebarItem = ({
-  Icon,
-  name,
-  description,
-  isActive,
-  setActiveButton,
-  navigateForPage,
-}: Props) => {
+export const SidebarItem = ({ Icon, name, description, isActive, navigateForPage }: Props) => {
   const { theme } = useContext(ThemeContext);
 
   const { openModal } = React.useContext(ModalContext);
@@ -33,7 +25,6 @@ export const SidebarItem = ({
 
     if (name === "Settings") return openModal("settings");
 
-    setActiveButton(name);
     navigateForPage(name);
   };
 

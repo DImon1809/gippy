@@ -1,0 +1,48 @@
+.support__default__card {
+  width: 1080px;
+  padding: 32px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallet__wrapper {
+  width: 50px;
+  height: 50px;
+  color: #64748b;
+}
+
+.support__info__card {
+  width: 1080px;
+  padding: 32px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+.card__description {
+  font-size: 18px;
+  color: #64748b;
+
+  &__connect {
+    font-size: 18px;
+    color: black;
+    line-height: 30px;
+  }
+}
+
+.notification {
+  font-size: 14px;
+  color: #64748b;
+}
