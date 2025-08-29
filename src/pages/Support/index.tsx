@@ -18,8 +18,6 @@ const statsData = [
 export const Support = () => {
   const { address } = useAppSelector(state => state.walletSlice);
 
-  console.log("address", address);
-
   return (
     <section className={styles.support__dashboard}>
       <header className={styles.support__header}>

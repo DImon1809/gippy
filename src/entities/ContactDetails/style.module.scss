@@ -1,0 +1,134 @@
+.contact__details {
+  height: 100%;
+  border-left: 1px solid #ededed;
+
+  .contact__header {
+    padding: 24px;
+
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .content__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .default__message {
+    margin-top: 200px;
+    text-align: center;
+    color: #94a3b8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    span {
+      font-size: 14px;
+    }
+  }
+
+  .contact__wrapper {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .field__title {
+      font-size: 14;
+      font-weight: 500;
+    }
+
+    .first__name {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .address__wrapper {
+      margin-top: 8px;
+      padding: 16px;
+      background-color: #fff;
+      border-radius: 12px;
+      border: 1px solid #ededed;
+    }
+
+    .copy__button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 1px solid #d2d2d2;
+      background-color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      @media (max-width: 640px) {
+        cursor: default;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: #dae0e9;
+          transform: scale(1.01);
+        }
+      }
+
+      span {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    .coped__button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 1px solid #d2d2d2;
+      background-color: #18b332;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #fff;
+
+      span {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+      }
+    }
+
+    .description {
+      margin-top: 10px;
+
+      span {
+        font-size: 14px;
+      }
+    }
+
+    .calendar {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      span {
+        font-size: 14px;
+      }
+    }
+
+    .button {
+      width: 100%;
+      margin-top: 20px;
+    }
+  }
+}

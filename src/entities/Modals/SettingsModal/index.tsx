@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, useContext, useState } from "react";
+import { type ChangeEvent, useContext, useState } from "react";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
@@ -26,7 +26,7 @@ export const SettingsModal = () => {
 
   return (
     <section className={`${styles.settings__modal} ${theme === "dark" ? styles.dark : ""}`}>
-      <header>
+      <header className={styles.header}>
         <div>
           <h2 className={`${styles.settings__title} ${theme === "dark" ? styles.dark : ""}`}>
             Settings

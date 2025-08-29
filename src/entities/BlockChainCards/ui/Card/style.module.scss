@@ -1,0 +1,155 @@
+.card {
+  background-color: #fff;
+  border: 1px solid #ededed;
+  border-radius: 12px;
+  transition: box-shadow 0.3s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .card__header {
+    padding: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 2px solid #ededed;
+
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 14px;
+      color: #475569;
+    }
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #3b82f6, #14b8a6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 15px -3px rgb(0, 0, 0, 0.1), 0 4px 6px -4px rgb(0, 0, 0, 0.1);
+
+    span {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .rows__wrapper {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .row {
+    width: 340px;
+    height: 82px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ededed;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .coin__name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .preview {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .coin__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .coin__content__wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .coin__text__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      p {
+        font-size: 12px;
+        color: #647479;
+      }
+    }
+
+    .buttons__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button {
+      width: 21px;
+      height: 21px;
+      cursor: pointer;
+      color: #647479;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: #e2e8f0;
+        }
+      }
+    }
+  }
+
+  .coin__number__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+
+    .coin__balance {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .usd__value {
+      font-size: 12px;
+      font-weight: 400;
+      color: #475569;
+    }
+  }
+}

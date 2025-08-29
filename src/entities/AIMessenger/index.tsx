@@ -18,8 +18,6 @@ export const AIMessenger = () => {
 
   const { address } = useAppSelector(state => state.walletSlice);
 
-  console.log("address1", address);
-
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
@@ -45,8 +43,6 @@ export const AIMessenger = () => {
   const handleSendMessage = async () => {
     try {
       if (!myMessage.trim()) return;
-
-      console.log("address", address);
 
       if (!address) {
         return toast.warning("Пожалуйста, подключите крипто-кошелёк", {
@@ -118,12 +114,8 @@ export const AIMessenger = () => {
   useEffect(() => {
     if (isSendButton && !isAnimateSendButton) {
       const timer = setTimeout(() => {
-        console.log("send1");
         setIsAnimateSendButton(true);
-        console.log("send2");
       }, 200);
-
-      console.log("work2");
 
       return () => clearTimeout(timer);
     }
@@ -142,9 +134,6 @@ export const AIMessenger = () => {
 
     if (myMessage) setIsSendButton(true);
   }, [myMessage]);
-
-  console.log("isSendButton", isSendButton);
-  console.log("isAnimateSendButton", isAnimateSendButton);
 
   useEffect(() => {
     if (textareaRef.current) {

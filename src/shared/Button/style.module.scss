@@ -1,0 +1,54 @@
+.button {
+  width: fit-content;
+  max-height: 46px;
+  padding: 10px 24px 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  border-radius: 12px;
+  background-color: #3f79f7;
+  font-weight: 500;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.outline {
+    background-color: #fff;
+    border: 1px solid #cccaca;
+
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.02);
+        background-color: #fff;
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: scale(1.02);
+      background-color: #2563eb;
+    }
+  }
+
+  .icon {
+    margin-top: 4px;
+    color: #fff;
+  }
+
+  .button__text {
+    color: #fff;
+    font-size: 14px;
+
+    &.outline {
+      color: #334155;
+    }
+  }
+}

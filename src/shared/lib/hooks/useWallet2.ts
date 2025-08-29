@@ -23,7 +23,6 @@ export const useWallet2 = () => {
       dispatch(resetWalletState());
       setIsConnect(false);
 
-      console.log("Подключение разорвано");
       return;
     }
 
@@ -38,7 +37,6 @@ export const useWallet2 = () => {
         localStorage.removeItem("walletSignature");
         localStorage.removeItem("loginTimestamp");
         setIsConnect(false);
-        console.log("Пользователь отключился");
 
         return;
       }
@@ -47,7 +45,6 @@ export const useWallet2 = () => {
       if (recovered.toLowerCase() !== savedAddress.toLowerCase()) {
         dispatch(resetWalletState());
         localStorage.clear();
-        console.log("Подпись не валидна");
         return;
       }
 
@@ -65,8 +62,6 @@ export const useWallet2 = () => {
       setIsConnect(true);
 
       setAddress(savedAddress);
-
-      console.log("Подключение восстановлено");
     } catch (error) {
       console.error("Ошибка восстановления подключения:", error);
       dispatch(resetWalletState());

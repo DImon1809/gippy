@@ -1,0 +1,105 @@
+.contact__list__header {
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+}
+
+.contacts__header {
+  padding: 0px 24px 0px 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.list {
+  padding: 24px 24px 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .contact__wrapper {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 2px solid #ededed;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    @media (max-width: 640px) {
+      cursor: default;
+    }
+
+    .contact__name {
+      h4 {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .address {
+    margin-left: 10px;
+
+    p {
+      font-size: 12px;
+      font-weight: 400;
+      color: #64748b;
+    }
+  }
+
+  .description {
+    p {
+      font-size: 14px;
+      font-weight: 400;
+      color: #64748b;
+    }
+  }
+
+  .wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    top: 16px;
+    right: 14px;
+    color: #64748b;
+    gap: 8px;
+
+    span {
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .copy__wrapper {
+      width: 21px;
+      height: 21px;
+      cursor: pointer;
+      color: #647479;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: #e2e8f0;
+        }
+      }
+    }
+  }
+}

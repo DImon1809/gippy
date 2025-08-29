@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowDownUp, ArrowUpDown, Download } from "lucide-react";
 
 import styles from "./style.module.scss";

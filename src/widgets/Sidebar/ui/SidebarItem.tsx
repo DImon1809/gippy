@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import React, { useContext } from "react";
+import { useContext } from "react";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
@@ -17,13 +17,12 @@ type Props = {
 export const SidebarItem = ({ Icon, name, description, isActive, navigateForPage }: Props) => {
   const { theme } = useContext(ThemeContext);
 
-  const { openModal } = React.useContext(ModalContext);
+  const { openModal } = useContext(ModalContext);
 
   const handleClick = () => {
-    console.log(name);
     if (name === "Positions") return;
 
-    if (name === "Settings") return openModal("settings");
+    if (name === "Settings") return openModal("settings", null);
 
     navigateForPage(name);
   };

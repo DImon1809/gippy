@@ -25,7 +25,6 @@ export const walletSlice = createSlice({
   reducers: {
     setWalletState: (state, action: PayloadAction<Partial<InitialState>>) => {
       const data = { ...state, ...action.payload };
-      console.log("state", data);
 
       Object.assign(state, data);
     },

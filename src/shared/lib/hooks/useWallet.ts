@@ -47,7 +47,6 @@ const migrateOldUserName = (address: string): void => {
       saveUserName(address, oldUserName);
       // Удаляем старый ключ
       localStorage.removeItem("userName");
-      console.log("Мигрировано имя пользователя со старого формата");
     }
   } catch (error) {
     console.error("Ошибка при миграции имени пользователя:", error);

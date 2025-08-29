@@ -1,0 +1,23 @@
+.wallet {
+  width: 100%;
+  background-color: #f2f4f6;
+  display: flex;
+  justify-content: center;
+
+  .wallet__content {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .wallet__header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .wallet__title {
+      font-size: 26px;
+    }
+  }
+}
