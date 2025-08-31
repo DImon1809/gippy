@@ -1,8 +1,10 @@
-import React from "react";
+import { useContext } from "react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppSelector } from "@/app/store";
 import { BalanceCard } from "@/entities/BalanceCard";
 import { SupportDefaultCard } from "@/entities/SupportDefaultCard";
+import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import styles from "./style.module.scss";
 
@@ -16,13 +18,22 @@ const statsData = [
 ];
 
 export const Support = () => {
+  const { theme } = useContext(ThemeContext);
+
   const { address } = useAppSelector(state => state.walletSlice);
+  const { isRestoring } = useWallet2();
+
+  console.log(address);
+
+  if (isRestoring) return <div>Восстановление</div>;
 
   return (
-    <section className={styles.support__dashboard}>
+    <section className={`${styles.support__dashboard} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.support__header}>
-        <h3 className={styles.support__title}>Financial AI Dashboard</h3>
-        <p className={styles.support__description}>
+        <h3 className={`${styles.support__title} ${theme === "dark" ? styles.dark : ""}`}>
+          Financial AI Dashboard
+        </h3>
+        <p className={`${styles.support__description} ${theme === "dark" ? styles.dark : ""}`}>
           Professional crypto asset management interface
         </p>
       </header>

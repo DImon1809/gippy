@@ -4,6 +4,10 @@
   display: flex;
   justify-content: center;
 
+  &.dark {
+    background-color: #020617;
+  }
+
   .wallet__content {
     padding: 32px;
     display: flex;
@@ -18,6 +22,16 @@
 
     .wallet__title {
       font-size: 26px;
+
+      &.dark {
+        color: #fff;
+      }
+    }
+
+    .wallet__description {
+      &.dark {
+        color: #cbd5e1;
+      }
     }
   }
 }

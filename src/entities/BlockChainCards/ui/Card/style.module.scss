@@ -4,6 +4,11 @@
   border-radius: 12px;
   transition: box-shadow 0.3s ease;
 
+  &.dark {
+    background-color: #0c1327;
+    border: 1px solid #cbd5e142;
+  }
+
   @media (hover: hover) {
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -17,14 +22,26 @@
     align-items: center;
     border-bottom: 2px solid #ededed;
 
-    h3 {
-      font-size: 20px;
-      font-weight: 600;
+    &.dark {
+      border-bottom: 2px solid #cbd5e142;
     }
 
-    p {
+    .card__title {
+      font-size: 20px;
+      font-weight: 600;
+
+      &.dark {
+        color: #fff;
+      }
+    }
+
+    .card__tokens {
       font-size: 14px;
       color: #475569;
+
+      &.dark {
+        color: #99a6ba;
+      }
     }
   }
 
@@ -32,7 +49,8 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(to bottom, #3b82f6, #14b8a6);
+    // background: linear-gradient(to bottom, #3b82f6, #14b8a6);
+    background: linear-gradient(124deg, #3b82f6, #14b8a6);
     color: #fff;
     display: flex;
     align-items: center;
@@ -63,6 +81,11 @@
     border-radius: 12px;
     transition: all 0.3s ease;
 
+    &.dark {
+      background-color: #192234;
+      border: 1px solid #cbd5e142;
+    }
+
     @media (hover: hover) {
       &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -72,6 +95,10 @@
     .coin__name {
       font-size: 14px;
       font-weight: 500;
+
+      &.dark {
+        color: #fff;
+      }
     }
 
     .preview {
@@ -109,6 +136,12 @@
         font-size: 12px;
         color: #647479;
       }
+
+      &.dark {
+        p {
+          color: #94a3b8;
+        }
+      }
     }
 
     .buttons__wrapper {
@@ -122,10 +155,21 @@
       height: 21px;
       cursor: pointer;
       color: #647479;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
+
+      &.dark {
+        color: #94a3b8;
+
+        @media (hover: hover) {
+          &:hover {
+            background-color: #cbd5e142;
+          }
+        }
+      }
 
       @media (hover: hover) {
         &:hover {
@@ -144,12 +188,20 @@
     .coin__balance {
       font-size: 14px;
       font-weight: 600;
+
+      &.dark {
+        color: #fff;
+      }
     }
 
     .usd__value {
       font-size: 12px;
       font-weight: 400;
       color: #475569;
+
+      &.dark {
+        color: #99a6ba;
+      }
     }
   }
 }

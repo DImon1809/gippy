@@ -1,6 +1,10 @@
 .transactions {
   width: 100%;
   background-color: #f2f4f6;
+
+  &.dark {
+    background-color: #020617;
+  }
 }
 
 .transactions__header {
@@ -11,5 +15,15 @@
 
   .transactions__title {
     font-size: 26px;
+
+    &.dark {
+      color: #fff;
+    }
+  }
+
+  .transactions__description {
+    &.dark {
+      color: #cbd5e1;
+    }
   }
 }

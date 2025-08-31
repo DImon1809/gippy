@@ -7,10 +7,20 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
 
+  &.dark {
+    background-color: #0c1327;
+  }
+
   .table__head {
     td {
       color: rgb(51 65 85);
       font-weight: 600;
+    }
+
+    &.dark {
+      td {
+        color: #fff;
+      }
     }
 
     .amount__wrapper {
@@ -38,6 +48,15 @@
       font-weight: 500;
       width: 20%;
     }
+
+    &.dark {
+      border-top: 2px solid #cbd5e142;
+
+      td {
+        color: #fff;
+        border-top: 1px solid #cbd5e142;
+      }
+    }
   }
 
   td {
@@ -57,6 +76,18 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+
+    &.dark {
+      color: #d7d7d7;
+      border: 1px solid #d7d7d745;
+      background-color: transparent;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: #161c2e;
+        }
+      }
+    }
 
     @media (hover: hover) {
       &:hover {

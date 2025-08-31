@@ -7,6 +7,10 @@
   align-items: center;
   gap: 32px;
 
+  &.dark {
+    background-color: #020617;
+  }
+
   .support__header {
     width: 1080px;
     display: flex;
@@ -16,11 +20,19 @@
 
   .support__title {
     font-size: 36px;
+
+    &.dark {
+      color: #fff;
+    }
   }
 
   .support__description {
     font-size: 18px;
     color: #64748b;
+
+    &.dark {
+      color: #cbd5e1;
+    }
   }
 
   .stats__wrapper {

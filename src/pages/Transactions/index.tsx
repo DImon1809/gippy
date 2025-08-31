@@ -1,18 +1,27 @@
-import React from "react";
+import { useContext } from "react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { TransactionsTable } from "@/entities/TransactionsTable";
 
 import styles from "./style.module.scss";
 
 export const Transactions = () => {
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <section className={styles.transactions}>
+    <section className={`${styles.transactions} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.transactions__header}>
         <div>
-          <h3 className={styles.transactions__title}>Transaction History</h3>
+          <h3 className={`${styles.transactions__title} ${theme === "dark" ? styles.dark : ""}`}>
+            Transaction History
+          </h3>
         </div>
         <div>
-          <p>View and manage your transactions through Gippy</p>
+          <p
+            className={`${styles.transactions__description} ${theme === "dark" ? styles.dark : ""}`}
+          >
+            View and manage your transactions through Gippy
+          </p>
         </div>
       </header>
       <TransactionsTable />

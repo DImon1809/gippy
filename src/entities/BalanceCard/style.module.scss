@@ -6,6 +6,11 @@
   border-radius: 12px;
   position: relative;
 
+  &.dark {
+    background-color: #020617;
+    border: 1px solid #cbd5e11c;
+  }
+
   .content__wrapper {
     display: flex;
     flex-direction: column;
@@ -15,10 +20,18 @@
   .card__title {
     font-size: 14px;
     color: #475569;
+
+    &.dark {
+      color: #cbd5e1;
+    }
   }
 
   .balance__value {
     font-size: 24px;
+
+    &.dark {
+      color: #fff;
+    }
   }
 
   .balance__change {
@@ -34,11 +47,21 @@
     &.plus {
       background-color: #dcfce7;
       color: #008000;
+
+      &.dark {
+        background-color: #0f342e;
+        color: #4ade80;
+      }
     }
 
     &.minus {
       background-color: #fee2e2;
       color: #c41515;
+
+      &.dark {
+        background-color: #381b29;
+        color: #f87171;
+      }
     }
 
     span {

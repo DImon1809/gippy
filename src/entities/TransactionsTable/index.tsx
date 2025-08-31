@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { ArrowDownUp, ArrowUpDown, Download } from "lucide-react";
+
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 
 import styles from "./style.module.scss";
 
@@ -99,6 +101,8 @@ const transactions = [
 type SortType = "min" | "max";
 
 export const TransactionsTable = () => {
+  const { theme } = useContext(ThemeContext);
+
   const [sortType, setSortType] = useState<SortType | null>(null);
 
   const hanldeSort = () => {
@@ -118,8 +122,8 @@ export const TransactionsTable = () => {
   }, [sortType, transactions]);
 
   return (
-    <table className={styles.transactions__table}>
-      <thead className={styles.table__head}>
+    <table className={`${styles.transactions__table} ${theme === "dark" ? styles.dark : ""}`}>
+      <thead className={`${styles.table__head} ${theme === "dark" ? styles.dark : ""}`}>
         <tr>
           {headers.map((head, i) => (
             <td
@@ -139,7 +143,7 @@ export const TransactionsTable = () => {
           ))}
         </tr>
       </thead>
-      <tbody className={styles.table__body}>
+      <tbody className={`${styles.table__body} ${theme === "dark" ? styles.dark : ""}`}>
         {tableData.map((data, i) => (
           <tr key={i}>
             <td>{data.type}</td>
@@ -156,7 +160,7 @@ export const TransactionsTable = () => {
               )}
             </td>
             <td>
-              <div className={styles.download__wrapper}>
+              <div className={`${styles.download__wrapper} ${theme === "dark" ? styles.dark : ""}`}>
                 <Download size={14} />
               </div>
             </td>

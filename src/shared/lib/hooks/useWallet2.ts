@@ -14,19 +14,21 @@ export const useWallet2 = () => {
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isConnect, setIsConnect] = useState<boolean>(false);
   const [address, setAddress] = useState<string | null>(null);
+  const [isRestoring, setIsRestoring] = useState<boolean>(true); // ← новое состояние
 
   const restoreConnection = async () => {
     const savedAddress = localStorage.getItem("walletAddress");
     const savedSignature = localStorage.getItem("walletSignature");
 
-    if (!savedAddress || !savedSignature || !window?.ethereum) {
-      dispatch(resetWalletState());
-      setIsConnect(false);
-
-      return;
-    }
-
     try {
+      // Если нет данных или MetaMask недоступен — сбрасываем
+      if (!savedAddress || !savedSignature || !window?.ethereum) {
+        dispatch(resetWalletState());
+        setIsConnect(false);
+        setIsRestoring(false); // ✅ Восстановление завершено (ничего восстанавливать не надо)
+        return;
+      }
+
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
       });
@@ -37,7 +39,7 @@ export const useWallet2 = () => {
         localStorage.removeItem("walletSignature");
         localStorage.removeItem("loginTimestamp");
         setIsConnect(false);
-
+        setIsRestoring(false); // ✅ Завершаем восстановление
         return;
       }
 
@@ -45,6 +47,8 @@ export const useWallet2 = () => {
       if (recovered.toLowerCase() !== savedAddress.toLowerCase()) {
         dispatch(resetWalletState());
         localStorage.clear();
+        setIsConnect(false);
+        setIsRestoring(false); // ✅
         return;
       }
 
@@ -60,13 +64,16 @@ export const useWallet2 = () => {
         }),
       );
       setIsConnect(true);
-
       setAddress(savedAddress);
     } catch (error) {
       console.error("Ошибка восстановления подключения:", error);
       dispatch(resetWalletState());
       localStorage.clear();
       setIsConnect(false);
+      // всё равно устанавливаем, что восстановление завершено
+    } finally {
+      // ✅ В любом случае — восстановление закончено
+      setIsRestoring(false);
     }
   };
 
@@ -113,14 +120,12 @@ export const useWallet2 = () => {
         );
 
         setAddress(address);
-
-        setIsConnecting(false);
         setIsConnect(true);
       }
     } catch (err) {
-      setIsConnecting(false);
-
       console.error(err);
+    } finally {
+      setIsConnecting(false);
     }
   }, []);
 
@@ -136,8 +141,15 @@ export const useWallet2 = () => {
   }, []);
 
   useEffect(() => {
-    restoreConnection();
+    restoreConnection(); // запускается при монтировании
   }, []);
 
-  return { connectWallet, disconnectWallet, isConnecting, isConnect, address };
+  return {
+    connectWallet,
+    disconnectWallet,
+    isConnecting,
+    isConnect,
+    address,
+    isRestoring,
+  };
 };

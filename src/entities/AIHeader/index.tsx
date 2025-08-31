@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Wallet } from "lucide-react";
 import { LogOut, User } from "lucide-react";
 

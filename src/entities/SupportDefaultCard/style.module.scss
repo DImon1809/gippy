@@ -8,6 +8,11 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  &.dark {
+    background-color: #0a1022;
+    border: 1px solid #cbd5e11c;
+  }
 }
 
 .wallet__wrapper {
@@ -25,24 +30,46 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  &.dark {
+    background-color: #0a1022;
+    border: 1px solid #cbd5e11c;
+  }
 }
 
-h3 {
+.support__title,
+.support__info__title {
   font-size: 24px;
+
+  &.dark {
+    color: #fff;
+  }
 }
 
 .card__description {
   font-size: 18px;
   color: #64748b;
 
+  &.dark {
+    color: #fff;
+  }
+
   &__connect {
     font-size: 18px;
     color: black;
     line-height: 30px;
+
+    &.dark {
+      color: #fff;
+    }
   }
 }
 
 .notification {
   font-size: 14px;
   color: #64748b;
+
+  &.dark {
+    color: #99a6ba;
+  }
 }
