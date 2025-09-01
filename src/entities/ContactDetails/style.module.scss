@@ -2,12 +2,20 @@
   height: 100%;
   border-left: 1px solid #ededed;
 
+  &.dark {
+    border-left: 1px solid #ededed59;
+  }
+
   .contact__header {
     padding: 24px;
 
-    h3 {
+    .contact__header__title {
       font-size: 20px;
       font-weight: 600;
+
+      &.dark {
+        color: #fff;
+      }
     }
   }
 
@@ -39,13 +47,21 @@
     gap: 16px;
 
     .field__title {
-      font-size: 14;
+      font-size: 14px;
       font-weight: 500;
+
+      &.dark {
+        color: #e1e9f4;
+      }
     }
 
     .first__name {
       font-size: 24px;
       font-weight: 700;
+
+      &.dark {
+        color: #fff;
+      }
     }
 
     .address__wrapper {
@@ -54,10 +70,24 @@
       background-color: #fff;
       border-radius: 12px;
       border: 1px solid #ededed;
+
+      &.dark {
+        background-color: #0f172a;
+        border: 1px solid #cccaca34;
+      }
+
+      .address__wrapper__text {
+        font-size: 14px;
+
+        &.dark {
+          color: #fff;
+        }
+      }
     }
 
     .copy__button {
       width: 100%;
+      height: 38px;
       margin-top: 8px;
       padding: 8px 16px;
       border-radius: 12px;
@@ -69,6 +99,26 @@
       gap: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
+
+      &.dark {
+        background-color: #0f172a;
+        border: 1px solid #cccaca34;
+
+        span {
+          color: #fff;
+        }
+
+        svg {
+          color: #fff;
+        }
+
+        @media (hover: hover) {
+          &:hover {
+            background-color: #202738;
+            transform: scale(1.01);
+          }
+        }
+      }
 
       @media (max-width: 640px) {
         cursor: default;
@@ -89,6 +139,7 @@
 
     .coped__button {
       width: 100%;
+      height: 38px;
       margin-top: 8px;
       padding: 8px 16px;
       border-radius: 12px;
@@ -100,6 +151,10 @@
       gap: 10px;
       color: #fff;
 
+      &.dark {
+        border: none;
+      }
+
       span {
         font-size: 14px;
         font-weight: 500;
@@ -110,8 +165,12 @@
     .description {
       margin-top: 10px;
 
-      span {
+      .description__text {
         font-size: 14px;
+
+        &.dark {
+          color: #fff;
+        }
       }
     }
 
@@ -121,8 +180,18 @@
       align-items: center;
       gap: 10px;
 
-      span {
+      &.dark {
+        svg {
+          color: #ffffffa3;
+        }
+      }
+
+      .calendar__text {
         font-size: 14px;
+
+        &.dark {
+          color: #ffffffa3;
+        }
       }
     }
 

@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Calendar, Check, Copy, User } from "lucide-react";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { Button } from "@/shared";
 import type { Contact } from "@/shared/lib/types";
 
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export const ContactDetails = ({ currentContact, setContacts }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   const { openModal } = useContext(ModalContext);
 
   const [isCopy, setIsCopy] = useState<boolean>(false);
@@ -29,9 +32,11 @@ export const ContactDetails = ({ currentContact, setContacts }: Props) => {
   }, [isCopy]);
 
   return (
-    <section className={styles.contact__details}>
+    <section className={`${styles.contact__details} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.contact__header}>
-        <h3>Contact Details</h3>
+        <h3 className={`${styles.contact__header__title} ${theme === "dark" ? styles.dark : ""}`}>
+          Contact Details
+        </h3>
       </header>
       {!currentContact ? (
         <div className={styles.content__wrapper}>
@@ -43,19 +48,36 @@ export const ContactDetails = ({ currentContact, setContacts }: Props) => {
       ) : (
         <div className={styles.contact__wrapper}>
           <div>
-            <h4 className={styles.field__title}>Name</h4>
-            <h4 className={styles.first__name}>{currentContact.name}</h4>
+            <h4 className={`${styles.field__title} ${theme === "dark" ? styles.dark : ""}`}>
+              Name
+            </h4>
+            <h4 className={`${styles.first__name} ${theme === "dark" ? styles.dark : ""}`}>
+              {currentContact.name}
+            </h4>
           </div>
           <div>
-            <h4 className={styles.field__title}>Wallet Address</h4>
-            <div className={styles.address__wrapper}>{currentContact.address}</div>
+            <h4 className={`${styles.field__title} ${theme === "dark" ? styles.dark : ""}`}>
+              Wallet Address
+            </h4>
+            <div className={`${styles.address__wrapper} ${theme === "dark" ? styles.dark : ""}`}>
+              <span
+                className={`${styles.address__wrapper__text} ${
+                  theme === "dark" ? styles.dark : ""
+                }`}
+              >
+                {currentContact.address}
+              </span>
+            </div>
             {!isCopy ? (
-              <div className={styles.copy__button} onClick={() => setIsCopy(true)}>
+              <div
+                className={`${styles.copy__button} ${theme === "dark" ? styles.dark : ""}`}
+                onClick={() => setIsCopy(true)}
+              >
                 <Copy size={16} />
                 <span>Copy Address</span>
               </div>
             ) : (
-              <div className={styles.coped__button}>
+              <div className={`${styles.coped__button} ${theme === "dark" ? styles.dark : ""}`}>
                 <Check size={16} />
                 <span>Copy Address</span>
               </div>
@@ -63,17 +85,27 @@ export const ContactDetails = ({ currentContact, setContacts }: Props) => {
           </div>
 
           <div>
-            <h4 className={styles.field__title}>Description</h4>
+            <h4 className={`${styles.field__title} ${theme === "dark" ? styles.dark : ""}`}>
+              Description
+            </h4>
             <div className={styles.description}>
-              <span>{currentContact.description}</span>
+              <span
+                className={`${styles.description__text} ${theme === "dark" ? styles.dark : ""}`}
+              >
+                {currentContact.description}
+              </span>
             </div>
           </div>
 
           <div>
-            <h4 className={styles.field__title}>Added</h4>
-            <div className={styles.calendar}>
+            <h4 className={`${styles.field__title} ${theme === "dark" ? styles.dark : ""}`}>
+              Added
+            </h4>
+            <div className={`${styles.calendar} ${theme === "dark" ? styles.dark : ""}`}>
               <Calendar size={16} />
-              <span>{currentContact.dateAdded}</span>
+              <span className={`${styles.calendar__text} ${theme === "dark" ? styles.dark : ""}`}>
+                {currentContact.dateAdded}
+              </span>
             </div>
           </div>
 

@@ -1,5 +1,7 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useContext } from "react";
 import { Edit, Plus } from "lucide-react";
+
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 
 import styles from "./style.module.scss";
 
@@ -20,6 +22,8 @@ export const Button = ({
   isOutline = false,
   handleClick,
 }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <div
       onClick={event => {
@@ -27,12 +31,18 @@ export const Button = ({
 
         if (handleClick) handleClick();
       }}
-      className={`${styles.button} ${isOutline ? styles.outline : ""} ${className}`}
+      className={`${styles.button} ${isOutline ? styles.outline : ""} ${
+        theme === "dark" ? styles.dark : ""
+      } ${className}`}
     >
       {isAdd && <Plus size={16} className={styles.icon} />}
       {isEdit && <Edit size={16} className={styles.icon} />}
 
-      <span className={`${styles.button__text}  ${isOutline ? styles.outline : ""}`}>
+      <span
+        className={`${styles.button__text}  ${isOutline ? styles.outline : ""} ${
+          theme === "dark" ? styles.dark : ""
+        }`}
+      >
         {children}
       </span>
     </div>

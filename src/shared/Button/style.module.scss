@@ -27,6 +27,18 @@
     }
   }
 
+  &.dark.outline {
+    background-color: transparent;
+    border: 1px solid #cccaca70;
+
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.02);
+        background-color: #ffffff23;
+      }
+    }
+  }
+
   @media (max-width: 640px) {
     cursor: default;
   }
@@ -49,6 +61,10 @@
 
     &.outline {
       color: #334155;
+    }
+
+    &.dark.outline {
+      color: #fff;
     }
   }
 }

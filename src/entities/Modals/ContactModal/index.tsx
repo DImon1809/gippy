@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { Button, Input, TextArea, XButton } from "@/shared";
 import type { Contact } from "@/shared/lib/types";
 
@@ -15,6 +16,8 @@ type Props = {
 };
 
 export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   const { closeModal } = useContext(ModalContext);
 
   const [firstName, setFirstName] = useState<string>(currentContact?.name ?? "");
@@ -67,17 +70,24 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
   };
 
   return (
-    <section className={styles.contact__modal}>
+    <section className={`${styles.contact__modal} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.header}>
         <div>
-          <h2 className={styles.contact__title}>{isEdit ? "Edit Contact" : "Add New Contact"}</h2>
+          <h2 className={`${styles.contact__title} ${theme === "dark" ? styles.dark : ""}`}>
+            {isEdit ? "Edit Contact" : "Add New Contact"}
+          </h2>
         </div>
         <XButton handler={closeModal} />
       </header>
 
       <form className={styles.form}>
         <div>
-          <label htmlFor="firstName">Name</label>
+          <label
+            htmlFor="firstName"
+            className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}
+          >
+            Name
+          </label>
           <Input
             id="firstName"
             placeholder="Enter contact name"
@@ -88,7 +98,12 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
         </div>
 
         <div>
-          <label htmlFor="walletAddress">Wallet Address</label>
+          <label
+            htmlFor="walletAddress"
+            className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}
+          >
+            Wallet Address
+          </label>
           <Input
             id="walletAddress"
             placeholder="Enter wallet address"
@@ -99,7 +114,12 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
         </div>
 
         <div>
-          <label htmlFor="description">Wallet Address</label>
+          <label
+            htmlFor="description"
+            className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}
+          >
+            Wallet Address
+          </label>
           <TextArea
             id="description"
             placeholder="Enter description (optional)"

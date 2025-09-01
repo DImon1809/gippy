@@ -1,4 +1,5 @@
 .contact__list__header {
+  height: 95px;
   padding: 24px;
   display: flex;
   gap: 20px;
@@ -13,6 +14,14 @@
   span {
     font-size: 14px;
     font-weight: 500;
+  }
+
+  &.dark {
+    color: #fff;
+
+    svg {
+      color: #ffffffa6;
+    }
   }
 }
 
@@ -34,6 +43,11 @@
     cursor: pointer;
     transition: transform 0.3s ease;
 
+    &.dark {
+      background-color: #1e293b;
+      border: 1px solid #cccaca34;
+    }
+
     @media (hover: hover) {
       &:hover {
         transform: translateY(-2px);
@@ -45,9 +59,11 @@
     }
 
     .contact__name {
-      h4 {
-        font-size: 14px;
-        font-weight: 600;
+      font-size: 14px;
+      font-weight: 600;
+
+      &.dark {
+        color: #fff;
       }
     }
   }
@@ -55,18 +71,24 @@
   .address {
     margin-left: 10px;
 
-    p {
+    .address__text {
       font-size: 12px;
       font-weight: 400;
       color: #64748b;
+
+      &.dark {
+        color: #b5c1d1;
+      }
     }
   }
 
   .description {
-    p {
-      font-size: 14px;
-      font-weight: 400;
-      color: #64748b;
+    font-size: 14px;
+    font-weight: 400;
+    color: #64748b;
+
+    &.dark {
+      color: #a0aec2;
     }
   }
 
@@ -79,6 +101,10 @@
     right: 14px;
     color: #64748b;
     gap: 8px;
+
+    &.dark {
+      color: #a0aec2;
+    }
 
     span {
       font-size: 12px;

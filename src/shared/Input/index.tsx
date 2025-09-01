@@ -1,6 +1,8 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Search } from "lucide-react";
+
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 
 import styles from "./style.module.scss";
 
@@ -14,6 +16,8 @@ type Props = {
 };
 
 export const Input = ({ id, className, isSearch, placeholder, value, setValue }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   const [current, setCurrent] = useState<string>(value ?? "");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +34,9 @@ export const Input = ({ id, className, isSearch, placeholder, value, setValue }:
       {isSearch && <Search className={styles.search} size={16} />}
       <input
         placeholder={placeholder}
-        className={`${styles.input} ${isSearch ? styles.set_search : ""}`}
+        className={`${styles.input} ${isSearch ? styles.set_search : ""} ${
+          theme === "dark" ? styles.dark : ""
+        }`}
         value={current}
         onChange={handleChange}
       />

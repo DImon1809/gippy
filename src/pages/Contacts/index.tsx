@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { ContactDetails } from "@/entities/ContactDetails";
 import { ContactList } from "@/entities/ContactList";
 import type { Contact } from "@/shared/lib/types";
@@ -38,18 +39,24 @@ const initinalContacts = [
 ];
 
 export const Contacts = () => {
+  const { theme } = useContext(ThemeContext);
+
   const [contacts, setContacts] = useState<Contact[]>(initinalContacts);
   const [currentContact, setCurrentContact] = useState<Contact | undefined>(undefined);
 
   return (
-    <section className={styles.contacts}>
+    <section className={`${styles.contacts} ${theme === "dark" ? styles.dark : ""}`}>
       <div>
         <header className={styles.contacts__header}>
           <div>
-            <h3 className={styles.contacts__title}>Crypto Contact Book</h3>
+            <h3 className={`${styles.contacts__title} ${theme === "dark" ? styles.dark : ""}`}>
+              Crypto Contact Book
+            </h3>
           </div>
-          <div className={styles.contacts__description}>
-            <p>Manage contacts and wallet addresses</p>
+          <div>
+            <p className={`${styles.contacts__description} ${theme === "dark" ? styles.dark : ""}`}>
+              Manage contacts and wallet addresses
+            </p>
           </div>
         </header>
         <ContactList

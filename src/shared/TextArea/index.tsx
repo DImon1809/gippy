@@ -1,4 +1,6 @@
-import { type ChangeEvent, type Dispatch, type SetStateAction, useState } from "react";
+import { type ChangeEvent, type Dispatch, type SetStateAction, useContext, useState } from "react";
+
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 
 import styles from "./style.module.scss";
 
@@ -10,6 +12,8 @@ type Props = {
   setValue?: Dispatch<SetStateAction<string>>;
 };
 export const TextArea = ({ id, className, placeholder, value, setValue }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   const [current, setCurrent] = useState<string>(value ?? "");
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -24,7 +28,7 @@ export const TextArea = ({ id, className, placeholder, value, setValue }: Props)
   return (
     <div id={id} className={`${styles.textarea__wrapper} ${className}`}>
       <textarea
-        className={styles.textarea}
+        className={`${styles.textarea} ${theme === "dark" ? styles.dark : ""}`}
         placeholder={placeholder}
         value={current}
         onChange={handleChange}
