@@ -1,0 +1,57 @@
+.message {
+  max-width: 460px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  position: relative;
+
+  .row {
+    display: block;
+    margin-top: 10px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  &.ai {
+    background-color: #f1f5f9;
+  }
+
+  &.ai.dark {
+    background-color: #334155;
+
+    p {
+      color: #fff;
+    }
+  }
+
+  &.user {
+    background-color: #3b82f6;
+    color: #fff;
+  }
+
+  .sender {
+    position: absolute;
+    top: -4px;
+
+    &.ai {
+      left: -46px;
+    }
+
+    &.user {
+      right: -46px;
+    }
+  }
+
+  .time {
+    margin-top: 6px;
+
+    span {
+      font-size: 12px;
+    }
+
+    &.ai {
+      color: #647479;
+    }
+  }
+}

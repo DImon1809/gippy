@@ -1,9 +1,3 @@
-export type Theme = "light" | "dark";
-
-export type Contact = {
-  id: string;
-  name: string;
-  address: string;
-  description: string;
-  dateAdded: string;
-};
+export type { Contact } from "./Contact";
+export type { Theme } from "./Theme";
+export type { Transaction } from "./Transaction";

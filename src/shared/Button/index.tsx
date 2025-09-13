@@ -1,5 +1,5 @@
 import { type ReactNode, useContext } from "react";
-import { Edit, Plus } from "lucide-react";
+import { Edit, ExternalLink, Plus } from "lucide-react";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 
@@ -10,6 +10,7 @@ type Props = {
   className?: string;
   isAdd?: boolean;
   isEdit?: boolean;
+  isLink?: boolean;
   isOutline?: boolean;
   handleClick?: () => void;
 };
@@ -19,6 +20,7 @@ export const Button = ({
   className,
   isAdd = false,
   isEdit = false,
+  isLink = false,
   isOutline = false,
   handleClick,
 }: Props) => {
@@ -37,6 +39,7 @@ export const Button = ({
     >
       {isAdd && <Plus size={16} className={styles.icon} />}
       {isEdit && <Edit size={16} className={styles.icon} />}
+      {isLink && <ExternalLink size={16} className={styles.icon} />}
 
       <span
         className={`${styles.button__text}  ${isOutline ? styles.outline : ""} ${

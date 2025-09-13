@@ -5,16 +5,22 @@ import { Mic, Send } from "lucide-react";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppSelector } from "@/app/store";
 import { useSendMyMessageMutation } from "@/features/message/messageApi";
-import { GippyLogo } from "@/shared/assets/GippyLogo";
-import { UserLogo } from "@/shared/assets/UserLogo";
 import type { Message } from "@/shared/config/Message";
+import { useTransaction } from "@/shared/lib/hooks/useTransaction";
 
+import { GippyThink } from "./ui/GippyThink";
+import { PendingBlock } from "./ui/PendingBlock";
+import { ProcessingTransaction } from "./ui/ProcessingTransaction";
+import { SimpleMessage } from "./ui/SimpleMessage";
+import { TransactionSuccessful } from "./ui/TransactionSuccessful";
 import { TypingMessage } from "./ui/TypingMessage";
 
 import styles from "./style.module.scss";
 
 export const AIMessenger = () => {
   const { theme } = useContext(ThemeContext);
+
+  const { prepareAndSendTransaction } = useTransaction();
 
   const { address } = useAppSelector(state => state.walletSlice);
 
@@ -36,7 +42,7 @@ export const AIMessenger = () => {
     },
   ]);
 
-  const [sendMyMessage, { data }] = useSendMyMessageMutation();
+  const [sendMyMessage, { data, isLoading }] = useSendMyMessageMutation();
 
   const initialTextareaHeight = useRef<number>(0);
 
@@ -46,14 +52,14 @@ export const AIMessenger = () => {
 
       if (!address) {
         return toast.warning("Пожалуйста, подключите крипто-кошелёк", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: theme === "dark" ? "dark" : "light",
         });
       }
 
@@ -71,7 +77,7 @@ export const AIMessenger = () => {
         },
       ]);
 
-      await sendMyMessage({ query: copyMessage, session_id: address }).unwrap();
+      sendMyMessage({ query: copyMessage, session_id: address }).unwrap();
     } catch (err) {
       console.error(err);
     }
@@ -108,8 +114,32 @@ export const AIMessenger = () => {
   };
 
   useEffect(() => {
+    if (data?.transaction && isDone) {
+      prepareAndSendTransaction(data.transaction, setAllMessages);
+
+      console.log(data?.transaction);
+    }
+  }, [data, isDone]);
+
+  useEffect(() => {
+    const updateChatHeight = () => {
+      if (chatRef.current && wrapperRef.current) {
+        const height = window.innerHeight - 98 - wrapperRef.current.scrollHeight;
+        chatRef.current.style.height = `${height < 100 ? 100 : height}px`;
+      }
+    };
+
+    updateChatHeight();
+    window.addEventListener("resize", updateChatHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateChatHeight);
+    };
+  }, [allMessages]);
+
+  useEffect(() => {
     scrollToBottom();
-  }, [displayedText]);
+  }, [displayedText, allMessages, isLoading]);
 
   useEffect(() => {
     if (isSendButton && !isAnimateSendButton) {
@@ -136,7 +166,7 @@ export const AIMessenger = () => {
   }, [myMessage]);
 
   useEffect(() => {
-    if (textareaRef.current) {
+    if (textareaRef.current && wrapperRef.current) {
       if (!initialTextareaHeight.current) {
         initialTextareaHeight.current = textareaRef.current.offsetHeight;
       }
@@ -144,11 +174,7 @@ export const AIMessenger = () => {
       textareaRef.current.style.height = "52px";
       const newHeight = Math.min(textareaRef.current.scrollHeight, 200);
       textareaRef.current.style.height = `${newHeight}px`;
-
-      if (wrapperRef.current) {
-        const heightDiff = newHeight - initialTextareaHeight.current;
-        wrapperRef.current.style.transform = `translateY(-${heightDiff}px)`;
-      }
+      wrapperRef.current.style.height = `${newHeight + 52}px`;
     }
   }, [myMessage]);
 
@@ -156,43 +182,28 @@ export const AIMessenger = () => {
     <section className={`${styles.AIMessenger} ${theme === "dark" ? styles.dark : ""}`}>
       <div className={styles.chat} ref={chatRef}>
         <div>
-          {allMessages.map((message, index) => (
-            <div
-              key={index}
-              className={`${styles.message__wrapper} ${
-                message.type === "ai" ? styles.ai : styles.user
-              }`}
-            >
+          {allMessages.map((message, index) => {
+            return (
               <div
-                className={`${styles.message}
-                ${
-                  message.type === "ai"
-                    ? `${styles.ai} ${theme === "dark" ? styles.dark : ""}`
-                    : styles.user
-                }
-                `}
+                key={index}
+                className={`${styles.message__wrapper} ${message.type === "user" ? styles.user : styles.ai}`}
               >
-                <p>{message.content}</p>
-                <div
-                  className={`${styles.sender}
-                ${message.type === "ai" ? styles.ai : styles.user}
-                `}
-                >
-                  {message.type === "ai" ? <GippyLogo size={32} /> : <UserLogo />}
-                </div>
-
-                <div
-                  className={`${styles.time}
-                ${message.type === "ai" ? styles.ai : styles.user}
-                `}
-                >
-                  <span>{new Date(message.timestamp).toTimeString().slice(0, 5)}</span>
-                </div>
+                {message.type === "transaction" && message?.transaction?.status === "pending" ? (
+                  <PendingBlock message={message} />
+                ) : message.type === "transaction" && message?.transaction?.status === "processing" ? (
+                  <ProcessingTransaction message={message} />
+                ) : message.type === "transaction" && message?.transaction?.status === "success" ? (
+                  <TransactionSuccessful message={message} />
+                ) : (
+                  <SimpleMessage message={message} />
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
         <div className={`${styles.message__wrapper} ${styles.ai}`}>
+          {!isDone && isLoading && <GippyThink />}
           {!isDone && data?.response && (
             <TypingMessage
               speed={Math.max(10, Math.min(50, 2000 / data.response.length))}
@@ -204,10 +215,7 @@ export const AIMessenger = () => {
           )}
         </div>
       </div>
-      <div
-        ref={wrapperRef}
-        className={`${styles.input__message__wrapper} ${theme === "dark" ? styles.dark : ""}`}
-      >
+      <div ref={wrapperRef} className={`${styles.input__message__wrapper} ${theme === "dark" ? styles.dark : ""}`}>
         <div className={styles.input__message}>
           <textarea
             ref={textareaRef}

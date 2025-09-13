@@ -2,8 +2,9 @@ import type { Dispatch, SetStateAction } from "react";
 import { useContext, useEffect } from "react";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
-import styles from "@/entities/AIMessenger/style.module.scss";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
+
+import styles from "./style.module.scss";
 
 type Props = {
   text: string;
@@ -13,19 +14,17 @@ type Props = {
   setDisplayedText: Dispatch<SetStateAction<string>>;
 };
 
-export const TypingMessage = ({
-  text,
-  speed = 50,
-  displayedText,
-  handleDone,
-  setDisplayedText,
-}: Props) => {
+export const TypingMessage = ({ text, speed = 50, displayedText, handleDone, setDisplayedText }: Props) => {
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
-      setDisplayedText(prev => prev + text[index]);
+      setDisplayedText(prev => {
+        const temp = index === 1 ? text[0] + text[index] : prev + text[index];
+
+        return temp;
+      });
 
       index++;
       if (index >= text.length - 1) {
@@ -41,7 +40,13 @@ export const TypingMessage = ({
 
   return (
     <div className={`${styles.message} ${styles.ai} ${theme === "dark" ? styles.dark : ""}`}>
-      <p>{displayedText}</p>
+      {displayedText.split("\n").map((content, index) => {
+        return (
+          <p className={`${index > 0 ? styles.row : ""}`} key={index}>
+            {content}
+          </p>
+        );
+      })}
       <div className={`${styles.sender} ${styles.ai}`}>
         <GippyLogo size={32} />
       </div>

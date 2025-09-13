@@ -1,0 +1,76 @@
+.gippy__think {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+
+  .sender {
+    position: absolute;
+    top: -12px;
+    left: -46px;
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+
+    &.dark {
+      color: #647479;
+    }
+  }
+
+  .thinking {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+
+    .dot {
+      display: block;
+      width: 5px;
+      height: 5px;
+      background-color: #000;
+      border-radius: 50%;
+
+      &.dark {
+        background-color: #647479;
+      }
+
+      &:not(.l__1) {
+        animation: 1s shift-left-ball linear infinite;
+      }
+    }
+
+    .l__1 {
+      animation: 1s jump-ball linear infinite;
+    }
+  }
+}
+
+@keyframes shift-left-ball {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes jump-ball {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  30% {
+    transform: translate(0, -8px);
+  }
+
+  50% {
+    transform: translate(24px, -8px);
+  }
+
+  100% {
+    transform: translate(24px, 0);
+  }
+}

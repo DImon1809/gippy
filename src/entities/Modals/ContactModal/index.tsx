@@ -27,14 +27,14 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
   const handleSubmit = () => {
     if (!firstName || !walletAddress || !description) {
       return toast.warning("Пожалуйста, заполните все поля", {
-        position: "top-right",
+        position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: theme === "dark" ? "dark" : "light",
       });
     }
 
@@ -82,10 +82,7 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
 
       <form className={styles.form}>
         <div>
-          <label
-            htmlFor="firstName"
-            className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}
-          >
+          <label htmlFor="firstName" className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}>
             Name
           </label>
           <Input
@@ -98,10 +95,7 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
         </div>
 
         <div>
-          <label
-            htmlFor="walletAddress"
-            className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}
-          >
+          <label htmlFor="walletAddress" className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}>
             Wallet Address
           </label>
           <Input
@@ -114,10 +108,7 @@ export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Pr
         </div>
 
         <div>
-          <label
-            htmlFor="description"
-            className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}
-          >
+          <label htmlFor="description" className={`${styles.form__label} ${theme === "dark" ? styles.dark : ""}`}>
             Wallet Address
           </label>
           <TextArea

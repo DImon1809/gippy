@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .card {
+        width: 200px;
+        height: 100px;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-skeleton-item {
+        width: 50%;
+        height: 15px;
+        background-color: #e0e0e0;
+        margin: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-skeleton-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: skeleton-loading 1.5s infinite linear;
+      }
+
+      @keyframes skeleton-loading {
+        0% {
+          left: -100%;
+        }
+
+        100% {
+          left: 100%;
+        }
+      }
+
+      svg {
+        display: block;
+        animation: rot-1 2s linear infinite;
+      }
+
+      svg circle {
+        stroke: black;
+        fill: none;
+        stroke-dashoffset: 0;
+        animation: rot-2 1.5s ease-in-out infinite;
+      }
+
+      @keyframes rot-1 {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes rot-2 {
+        0% {
+          stroke-dasharray: 1, 150;
+          stroke-dashoffset: 0;
+        }
+        50% {
+          stroke-dasharray: 100, 150;
+          stroke-dashoffset: -20;
+        }
+        100% {
+          stroke-dasharray: 100, 150;
+          stroke-dashoffset: -124;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="card-skeleton-item"></div>
+
+      <svg width="100" height="100" viewbox="0 0 46 46">
+        <circle cx="23" cy="23" r="20" stroke-width="12" />
+      </svg>
+    </div>
+  </body>
+</html>

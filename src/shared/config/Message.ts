@@ -5,9 +5,9 @@ export type Message = {
   timestamp: Date;
   isVoice?: boolean;
   transaction?: {
-    transactionId: string;
-    amount: number;
-    recipient: string;
+    transactionId?: string;
+    amount?: number;
+    recipient?: string;
     status: "pending" | "processing" | "success" | "failed";
   };
 };

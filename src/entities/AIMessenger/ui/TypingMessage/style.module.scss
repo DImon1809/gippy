@@ -1,0 +1,36 @@
+.message {
+  max-width: 460px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  position: relative;
+
+  .row {
+    display: block;
+    margin-top: 10px;
+  }
+
+  &.ai {
+    background-color: #f1f5f9;
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  &.ai.dark {
+    background-color: #334155;
+
+    p {
+      color: #fff;
+    }
+  }
+
+  .sender {
+    position: absolute;
+    top: -4px;
+
+    &.ai {
+      left: -46px;
+    }
+  }
+}
