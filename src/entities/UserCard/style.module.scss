@@ -9,6 +9,10 @@
   gap: 12px;
   border-radius: 12px;
 
+  &.decrease {
+    width: fit-content;
+  }
+
   &.dark {
     background-color: #242f43;
     color: #fff;
@@ -27,6 +31,10 @@
   .name__description {
     display: flex;
     flex-direction: column;
+
+    &.decrease {
+      display: none;
+    }
 
     span {
       font-weight: 500;

@@ -8,8 +8,8 @@ type Props = {
   id?: string;
   className?: string;
   placeholder?: string;
-  value?: string;
-  setValue?: Dispatch<SetStateAction<string>>;
+  value?: string | null;
+  setValue?: Dispatch<SetStateAction<string | null>>;
 };
 export const TextArea = ({ id, className, placeholder, value, setValue }: Props) => {
   const { theme } = useContext(ThemeContext);

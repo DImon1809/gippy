@@ -17,12 +17,11 @@ type Props = {
 
 export const ContactModal = ({ currentContact, isEdit = false, setContacts }: Props) => {
   const { theme } = useContext(ThemeContext);
-
   const { closeModal } = useContext(ModalContext);
 
-  const [firstName, setFirstName] = useState<string>(currentContact?.name ?? "");
-  const [walletAddress, setWalletAddress] = useState<string>(currentContact?.address ?? "");
-  const [description, setDescription] = useState<string>(currentContact?.description ?? "");
+  const [firstName, setFirstName] = useState<string | null>(currentContact?.name ?? "");
+  const [walletAddress, setWalletAddress] = useState<string | null>(currentContact?.address ?? "");
+  const [description, setDescription] = useState<string | null>(currentContact?.description ?? "");
 
   const handleSubmit = () => {
     if (!firstName || !walletAddress || !description) {

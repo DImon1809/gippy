@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Mic, Send } from "lucide-react";
 
+import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppSelector } from "@/app/store";
 import { useSendMyMessageMutation } from "@/features/message/messageApi";
@@ -19,10 +20,12 @@ import styles from "./style.module.scss";
 
 export const AIMessenger = () => {
   const { theme } = useContext(ThemeContext);
+  const { openModal } = useContext(ModalContext);
 
   const { prepareAndSendTransaction } = useTransaction();
 
   const { address } = useAppSelector(state => state.walletSlice);
+  const { isAuthorized } = useAppSelector(state => state.userSlice);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -63,6 +66,10 @@ export const AIMessenger = () => {
         });
       }
 
+      if (!isAuthorized) {
+        return openModal("register");
+      }
+
       const copyMessage = JSON.parse(JSON.stringify(myMessage));
       setMyMessage("");
       setIsDone(false);
@@ -77,9 +84,18 @@ export const AIMessenger = () => {
         },
       ]);
 
-      sendMyMessage({ query: copyMessage, session_id: address }).unwrap();
-    } catch (err) {
-      console.error(err);
+      await sendMyMessage({ query: copyMessage, session_id: address }).unwrap();
+    } catch {
+      toast.error("Произошла ошибка при отправке сообщения", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: theme === "dark" ? "dark" : "light",
+      });
     }
   };
 
@@ -116,8 +132,6 @@ export const AIMessenger = () => {
   useEffect(() => {
     if (data?.transaction && isDone) {
       prepareAndSendTransaction(data.transaction, setAllMessages);
-
-      console.log(data?.transaction);
     }
   }, [data, isDone]);
 
@@ -135,7 +149,7 @@ export const AIMessenger = () => {
     return () => {
       window.removeEventListener("resize", updateChatHeight);
     };
-  }, [allMessages]);
+  }, [allMessages, wrapperRef]);
 
   useEffect(() => {
     scrollToBottom();

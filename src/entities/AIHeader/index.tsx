@@ -3,6 +3,8 @@ import { Wallet } from "lucide-react";
 import { LogOut, User } from "lucide-react";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
+import { useAppDispatch } from "@/app/store";
+import { loguot } from "@/features/user/userSlice";
 import { GippyLogo } from "@/shared/assets/GippyLogo";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
@@ -11,6 +13,8 @@ import styles from "./style.module.scss";
 export const AIHeader = () => {
   const { theme } = useContext(ThemeContext);
 
+  const dispatch = useAppDispatch();
+
   const { connectWallet, disconnectWallet, isConnect, isConnecting, address } = useWallet2();
 
   const currentAddress = address ? [...address.split("").slice(0, 12), "..."].join("") : "";
@@ -18,6 +22,8 @@ export const AIHeader = () => {
   const handleButton = () => {
     if (isConnect) {
       disconnectWallet();
+
+      dispatch(loguot());
     } else {
       connectWallet();
     }
@@ -42,9 +48,7 @@ export const AIHeader = () => {
       </div>
 
       <div
-        className={`${styles.connect__button} ${isConnect && styles.connect} ${
-          theme === "dark" ? styles.dark : ""
-        }`}
+        className={`${styles.connect__button} ${isConnect && styles.connect} ${theme === "dark" ? styles.dark : ""}`}
         onClick={handleButton}
       >
         {isConnecting ? (

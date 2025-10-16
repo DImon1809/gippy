@@ -11,8 +11,8 @@ type Props = {
   className?: string;
   isSearch?: boolean;
   placeholder?: string;
-  value?: string;
-  setValue?: Dispatch<SetStateAction<string>>;
+  value?: string | null;
+  setValue?: Dispatch<SetStateAction<string | null>>;
 };
 
 export const Input = ({ id, className, isSearch, placeholder, value, setValue }: Props) => {
@@ -34,9 +34,7 @@ export const Input = ({ id, className, isSearch, placeholder, value, setValue }:
       {isSearch && <Search className={styles.search} size={16} />}
       <input
         placeholder={placeholder}
-        className={`${styles.input} ${isSearch ? styles.set_search : ""} ${
-          theme === "dark" ? styles.dark : ""
-        }`}
+        className={`${styles.input} ${isSearch ? styles.set_search : ""} ${theme === "dark" ? styles.dark : ""}`}
         value={current}
         onChange={handleChange}
       />

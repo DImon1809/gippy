@@ -23,16 +23,12 @@ export const Support = () => {
   const { address } = useAppSelector(state => state.walletSlice);
   const { isRestoring } = useWallet2();
 
-  console.log(address);
-
   if (isRestoring) return <div>Восстановление</div>;
 
   return (
     <section className={`${styles.support__dashboard} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.support__header}>
-        <h3 className={`${styles.support__title} ${theme === "dark" ? styles.dark : ""}`}>
-          Financial AI Dashboard
-        </h3>
+        <h3 className={`${styles.support__title} ${theme === "dark" ? styles.dark : ""}`}>Financial AI Dashboard</h3>
         <p className={`${styles.support__description} ${theme === "dark" ? styles.dark : ""}`}>
           Professional crypto asset management interface
         </p>

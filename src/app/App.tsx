@@ -11,14 +11,14 @@ import { store } from "./store";
 export const App = () => {
   return (
     <BrowserRouter>
-      <ThemeProvider>
-        <ModalProvider>
-          <Provider store={store}>
+      <Provider store={store}>
+        <ThemeProvider>
+          <ModalProvider>
             <Root />
             <ToastContainer />
-          </Provider>
-        </ModalProvider>
-      </ThemeProvider>
+          </ModalProvider>
+        </ThemeProvider>
+      </Provider>
     </BrowserRouter>
   );
 };

@@ -1,6 +1,7 @@
 .sidebar__item {
   width: 247px;
   height: 70px;
+  min-height: 70px;
   display: flex;
   align-items: center;
   text-align: left;
@@ -11,10 +12,17 @@
   cursor: pointer;
   transition: all 0.3s ease;
 
+  &.decrease {
+    width: 50px;
+    height: 50px;
+    min-height: 50px;
+  }
+
   &.active {
     background: linear-gradient(to bottom, rgba(59, 130, 246, 0.15), rgba(20, 184, 166, 0.15));
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #60a5fa;
   }
 
   &.disable {
@@ -78,8 +86,8 @@
     transition-property: all;
     transition-duration: 300ms;
 
-    &.dark {
-      color: #e2e8f0;
+    &.active {
+      color: #60a5fa;
     }
   }
 }
@@ -89,6 +97,11 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  &.decrease {
+    // display: none;
+    visibility: hidden;
+  }
 
   span {
     font-weight: 500;

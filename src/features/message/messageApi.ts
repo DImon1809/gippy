@@ -1,4 +1,4 @@
-import { serviceApi } from "../serviceApi";
+import { serviceApi } from "@/features/serviceApi";
 
 const messageApi = serviceApi.injectEndpoints({
   endpoints: builder => ({
@@ -23,7 +23,7 @@ const messageApi = serviceApi.injectEndpoints({
     >({
       query: ({ query, session_id, chainId = 137 }) => ({
         url: "/query",
-        method: "post",
+        method: "POST",
         body: {
           query,
           session_id,

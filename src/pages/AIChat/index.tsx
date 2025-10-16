@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AIHeader } from "@/entities/AIHeader";
 import { AIMessenger } from "@/entities/AIMessenger";
 

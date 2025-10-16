@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import React, { useCallback } from "react";
 
 import { ContactModal } from "@/entities/Modals/ContactModal";
+import { RegistrationModal } from "@/entities/Modals/RegistrationModal";
 import { SettingsModal } from "@/entities/Modals/SettingsModal";
 
 import styles from "./style.module.scss";
@@ -9,13 +10,14 @@ import styles from "./style.module.scss";
 const modalsMap = {
   settings: SettingsModal,
   contact: ContactModal,
+  register: RegistrationModal,
 };
 
 type ModalsType = keyof typeof modalsMap;
 
 type ModalProps<T extends ModalsType> = ComponentPropsWithoutRef<(typeof modalsMap)[T]>;
 
-type OpenModal = <T extends ModalsType>(type: T, modalProps: ModalProps<T>) => void;
+type OpenModal = <T extends ModalsType>(type: T, modalProps?: ModalProps<T>) => void;
 
 type ModalProviderState<T extends ModalsType | null> = {
   type: T;
@@ -41,9 +43,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     modalProps: null,
   });
 
-  const Component = state.type
-    ? (modalsMap as Record<string, React.ElementType>)[state.type]
-    : null;
+  const Component = state.type ? (modalsMap as Record<string, React.ElementType>)[state.type] : null;
 
   const openModal: OpenModal = React.useCallback(
     (type, modalProps) => {

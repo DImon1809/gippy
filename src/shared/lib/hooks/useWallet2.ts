@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { ethers } from "ethers";
+import { ethers, getAddress } from "ethers";
 
 import { useAppDispatch } from "@/app/store";
+import { useLazyGetCodeQuery, useLoginMutation } from "@/features/user/userApi";
 import { resetWalletState, setWalletState } from "@/features/wallet/walletSlice";
 
 const SIGN_MESSAGE = `You: Do you Think We Can Improve this World, Make It pure and Bring Love for it?
@@ -11,10 +12,60 @@ Gippy: Behind me, my reader, and only after me, and I will show you such love!
 export const useWallet2 = () => {
   const dispatch = useAppDispatch();
 
+  const [getCode] = useLazyGetCodeQuery();
+  const [login] = useLoginMutation();
+
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isConnect, setIsConnect] = useState<boolean>(false);
   const [address, setAddress] = useState<string | null>(null);
-  const [isRestoring, setIsRestoring] = useState<boolean>(true); // ← новое состояние
+  const [isRestoring, setIsRestoring] = useState<boolean>(true);
+
+  const buildSiweTypedData = (params: {
+    appName: string;
+    chainId: number;
+    address: string;
+    domainHost: string;
+    originUrl: string;
+    nonce: string;
+    statement?: string;
+    expirationTime?: string;
+    issuedAt?: string;
+  }) => {
+    const issuedAt = params.issuedAt ?? new Date().toISOString();
+    return {
+      domain: { name: params.appName, version: "1", chainId: params.chainId },
+      types: {
+        EIP712Domain: [
+          { name: "name", type: "string" },
+          { name: "version", type: "string" },
+          { name: "chainId", type: "uint256" },
+        ],
+        SiweMessage: [
+          { name: "domain", type: "string" },
+          { name: "address", type: "adress" },
+          { name: "statement", type: "string" },
+          { name: "url", type: "string" },
+          { name: "version", type: "string" },
+          { chainId: "chainId", type: "uint256" },
+          { name: "nonce", type: "string" },
+          { name: "issuedAt", type: "string" },
+          { name: "expirationTime", type: "string" },
+        ],
+        primaryType: "SiweMessage" as const,
+        message: {
+          domain: params.domainHost,
+          address: params.address,
+          statement: params.statement ?? "Sign in to Gippy",
+          url: params.originUrl,
+          version: "1",
+          chainId: params.chainId,
+          nonce: params.nonce,
+          issuedAt,
+          expirationTime: params.expirationTime ?? new Date(Date.now() + 5 * 60_000).toISOString(),
+        },
+      },
+    };
+  };
 
   const restoreConnection = async () => {
     const savedAddress = localStorage.getItem("walletAddress");
@@ -57,7 +108,7 @@ export const useWallet2 = () => {
 
       dispatch(
         setWalletState({
-          address: savedAddress,
+          address: getAddress(savedAddress),
           error: null,
           showNameModal: !storedName,
           userName: storedName,
@@ -96,6 +147,8 @@ export const useWallet2 = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
 
+      const code = await getCode().unwrap();
+
       const signature = await signer.signMessage(SIGN_MESSAGE);
 
       const recoveredAddress = ethers.verifyMessage(SIGN_MESSAGE, signature);
@@ -106,13 +159,16 @@ export const useWallet2 = () => {
         const userNames = JSON.parse(localStorage.getItem("userNames") || "{}");
         const storedName = userNames?.[address.toLowerCase()] || null;
 
+        await login({ address, signature, nonce: String(Date.now() + 1) });
+
+        localStorage.setItem("code", code);
         localStorage.setItem("walletAddress", address);
         localStorage.setItem("walletSignature", signature);
         localStorage.setItem("loginTimestamp", Date.now().toString());
 
         dispatch(
           setWalletState({
-            address: address,
+            address: getAddress(address),
             error: null,
             showNameModal: !storedName,
             userName: storedName,

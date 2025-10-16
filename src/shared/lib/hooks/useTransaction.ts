@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 
@@ -13,43 +13,6 @@ export const useTransaction = () => {
   const { theme } = useContext(ThemeContext);
 
   const dispatch = useAppDispatch();
-
-  const messageRef = useRef<string | null>(null);
-
-  const restoreMessage = ({
-    status,
-    fromAddress,
-    baseTx,
-    transactionId,
-    setAllMessages,
-  }: {
-    status: "pending" | "processing" | "success" | "failed";
-    fromAddress: string;
-    baseTx: ethers.TransactionRequest;
-    transactionId?: string;
-    setAllMessages: Dispatch<SetStateAction<Message[]>>;
-  }) => {
-    setAllMessages(prev => [
-      ...prev.filter(message => message.id !== messageRef.current),
-      {
-        id: messageRef.current || String(Date.now()),
-        type: "transaction",
-        content: JSON.stringify({
-          from: hrefSlicer(fromAddress),
-          to: hrefSlicer(String(baseTx?.to ?? "")),
-        }),
-        timestamp: new Date(),
-        transaction: {
-          transactionId,
-          status,
-        },
-      },
-    ]);
-
-    setTimeout(() => {
-      messageRef.current = String(Date.now());
-    });
-  };
 
   const hrefSlicer = (href: string) => {
     if (!href?.length || href?.length < 2) return href;
@@ -185,35 +148,69 @@ export const useTransaction = () => {
         ...(gasLimit ? { gasLimit } : {}),
       };
 
-      console.log("finalTx", finalTx);
-
-      restoreMessage({ status: "pending", fromAddress, baseTx, setAllMessages });
+      setAllMessages(prev => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          type: "transaction",
+          content: JSON.stringify({
+            from: hrefSlicer(fromAddress),
+            to: hrefSlicer(String(baseTx?.to ?? "")),
+          }),
+          timestamp: new Date(),
+          transaction: {
+            status: "pending",
+          },
+        },
+      ]);
 
       const txResponse = await signer.sendTransaction(finalTx);
       console.log("Транзакция отправлена:", txResponse);
 
-      restoreMessage({
-        status: "processing",
-        fromAddress,
-        baseTx,
-        setAllMessages,
+      setAllMessages(prev => {
+        return [
+          ...prev.slice(0, prev.length - 1),
+          {
+            id: String(Date.now()),
+            type: "transaction",
+            content: JSON.stringify({
+              from: hrefSlicer(fromAddress),
+              to: hrefSlicer(String(baseTx?.to ?? "")),
+            }),
+            timestamp: new Date(),
+            transaction: {
+              status: "processing",
+            },
+          },
+        ];
       });
 
       const receipt = await txResponse.wait();
 
-      restoreMessage({
-        status: "success",
-        fromAddress,
-        baseTx,
-        setAllMessages,
-        transactionId: txResponse.hash,
+      setAllMessages(prev => {
+        return [
+          ...prev.slice(0, prev.length - 1),
+          {
+            id: String(Date.now()),
+            type: "transaction",
+            content: JSON.stringify({
+              from: hrefSlicer(fromAddress),
+              to: hrefSlicer(String(baseTx?.to ?? "")),
+            }),
+            timestamp: new Date(),
+            transaction: {
+              status: "success",
+              transactionId: txResponse.hash,
+            },
+          },
+        ];
       });
 
       console.log("receipt", receipt);
     } catch (err) {
       console.error(err);
 
-      setAllMessages(prev => prev.filter(message => message.id !== messageRef.current));
+      setAllMessages(prev => [...prev.slice(0, prev.length - 1)]);
 
       toast.error("Произошла ошибка при создании транзакции", {
         position: "top-center",
