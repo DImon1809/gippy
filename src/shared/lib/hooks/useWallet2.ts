@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { ethers, getAddress } from "ethers";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppDispatch } from "@/app/store";
 import { useLazyGetCodeQuery, useLoginMutation } from "@/features/user/userApi";
 import { resetWalletState, setWalletState } from "@/features/wallet/walletSlice";
@@ -10,6 +12,8 @@ Gippy: Behind me, my reader, and only after me, and I will show you such love!
 [WELCOME]`;
 
 export const useWallet2 = () => {
+  const { theme } = useContext(ThemeContext);
+
   const dispatch = useAppDispatch();
 
   const [getCode] = useLazyGetCodeQuery();
@@ -121,6 +125,17 @@ export const useWallet2 = () => {
       dispatch(resetWalletState());
       localStorage.clear();
       setIsConnect(false);
+
+      toast.error("Произошла ошибка при создании транзакции", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: theme === "dark" ? "dark" : "light",
+      });
       // всё равно устанавливаем, что восстановление завершено
     } finally {
       // ✅ В любом случае — восстановление закончено
@@ -159,7 +174,7 @@ export const useWallet2 = () => {
         const userNames = JSON.parse(localStorage.getItem("userNames") || "{}");
         const storedName = userNames?.[address.toLowerCase()] || null;
 
-        await login({ address, signature, nonce: String(Date.now() + 1) });
+        await login({ address, signature, nonce: String(Date.now() + 1), code: "24" });
 
         localStorage.setItem("code", code);
         localStorage.setItem("walletAddress", address);
@@ -180,6 +195,17 @@ export const useWallet2 = () => {
       }
     } catch (err) {
       console.error(err);
+
+      toast.error("Произошла ошибка при создании транзакции", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: theme === "dark" ? "dark" : "light",
+      });
     } finally {
       setIsConnecting(false);
     }
