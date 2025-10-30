@@ -1,7 +1,6 @@
 import { useContext } from "react";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
-import { useAppSelector } from "@/app/store";
 import { BalanceCard } from "@/entities/BalanceCard";
 import { SupportDefaultCard } from "@/entities/SupportDefaultCard";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
@@ -20,8 +19,7 @@ const statsData = [
 export const Support = () => {
   const { theme } = useContext(ThemeContext);
 
-  const { address } = useAppSelector(state => state.walletSlice);
-  const { isRestoring } = useWallet2();
+  const { address, isRestoring } = useWallet2();
 
   if (isRestoring) return <div>Восстановление</div>;
 

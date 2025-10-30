@@ -12,4 +12,12 @@ export default defineConfig({
       "@components": path.resolve(__dirname, "src/components"),
     },
   },
+  server: {
+    host: true,
+    port: 5173,
+    strictPort: true,
+    hmr: {
+      clientPort: 5173,
+    },
+  },
 });

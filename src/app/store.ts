@@ -7,7 +7,7 @@ import { userApi } from "@/features/user/userApi";
 import { userSlice } from "@/features/user/userSlice";
 import { walletSlice } from "@/features/wallet/walletSlice";
 
-const apiMiddleware = [serviceApi.middleware, userApi.middleware, authMiddleware.middleware];
+const apiMiddleware = [serviceApi.middleware, userApi.middleware];
 
 export const store = configureStore({
   reducer: {

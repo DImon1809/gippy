@@ -1,4 +1,3 @@
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
@@ -6,19 +5,19 @@ import { Root } from "@/app/Root";
 
 import { ModalProvider } from "./providers/ModalProvider";
 import { ThemeProvider } from "./providers/ThemeProvider";
-import { store } from "./store";
+import { Web3Provider } from "./providers/Web3Provider";
 
 export const App = () => {
   return (
-    <BrowserRouter>
-      <Provider store={store}>
+    <Web3Provider>
+      <BrowserRouter>
         <ThemeProvider>
           <ModalProvider>
             <Root />
             <ToastContainer />
           </ModalProvider>
         </ThemeProvider>
-      </Provider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </Web3Provider>
   );
 };

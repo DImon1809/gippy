@@ -8,6 +8,7 @@ import { useAppSelector } from "@/app/store";
 import { useSendMyMessageMutation } from "@/features/message/messageApi";
 import type { Message } from "@/shared/config/Message";
 import { useTransaction } from "@/shared/lib/hooks/useTransaction";
+import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import { GippyThink } from "./ui/GippyThink";
 import { PendingBlock } from "./ui/PendingBlock";
@@ -24,7 +25,8 @@ export const AIMessenger = () => {
 
   const { prepareAndSendTransaction } = useTransaction();
 
-  const { address } = useAppSelector(state => state.walletSlice);
+  const { address } = useWallet2();
+
   const { isAuthorized } = useAppSelector(state => state.userSlice);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);

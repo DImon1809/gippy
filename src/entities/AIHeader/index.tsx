@@ -15,12 +15,14 @@ export const AIHeader = () => {
 
   const dispatch = useAppDispatch();
 
-  const { connectWallet, disconnectWallet, isConnect, isConnecting, address } = useWallet2();
+  const { connectWallet, disconnectWallet, isConnected, isConnecting, address } = useWallet2();
+
+  console.log(address);
 
   const currentAddress = address ? [...address.split("").slice(0, 12), "..."].join("") : "";
 
   const handleButton = () => {
-    if (isConnect) {
+    if (isConnected) {
       disconnectWallet();
 
       dispatch(loguot());
@@ -48,12 +50,12 @@ export const AIHeader = () => {
       </div>
 
       <div
-        className={`${styles.connect__button} ${isConnect && styles.connect} ${theme === "dark" ? styles.dark : ""}`}
+        className={`${styles.connect__button} ${isConnected && styles.connect} ${theme === "dark" ? styles.dark : ""}`}
         onClick={handleButton}
       >
         {isConnecting ? (
           <div className={styles.spinner}></div>
-        ) : isConnect ? (
+        ) : isConnected ? (
           <>
             <User size={16} />
             <div className={styles.text__button__wrapper}>

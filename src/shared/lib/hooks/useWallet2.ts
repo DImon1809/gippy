@@ -1,132 +1,142 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { ethers, getAddress } from "ethers";
+import { getAddress } from "ethers";
+import { type Address, verifyTypedData } from "viem";
+import { useAccount, useConnect, useDisconnect, useSignMessage, useSignTypedData } from "wagmi";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppDispatch } from "@/app/store";
 import { useLazyGetCodeQuery, useLoginMutation } from "@/features/user/userApi";
 import { resetWalletState, setWalletState } from "@/features/wallet/walletSlice";
 
-const SIGN_MESSAGE = `You: Do you Think We Can Improve this World, Make It pure and Bring Love for it?
-Gippy: Behind me, my reader, and only after me, and I will show you such love!
-[WELCOME]`;
+type SiweTypedDataDomain = {
+  name: string;
+  version: string;
+  chainId: number;
+  verifyingContract?: `0x${string}`;
+};
+
+const PLACEHOLDER_NONCE = "98cd232c777ab7b1";
+
+type SiweMessage = {
+  domain: string;
+  address: Address;
+  statement: string;
+  uri: string;
+  version: "1";
+  chainId: bigint;
+  nonce: string;
+  issuedAt: string;
+  expirationTime: string;
+  notBefore: string;
+  requestId: string;
+  resources: readonly string[];
+};
+
+const siweTypes = {
+  SiweMessage: [
+    { name: "domain", type: "string" },
+    { name: "address", type: "address" },
+    { name: "statement", type: "string" },
+    { name: "uri", type: "string" },
+    { name: "version", type: "string" },
+    { name: "chainId", type: "uint256" },
+    { name: "nonce", type: "string" },
+    { name: "issuedAt", type: "string" },
+    { name: "expirationTime", type: "string" },
+    { name: "notBefore", type: "string" },
+    { name: "requestId", type: "string" },
+    { name: "resources", type: "string[]" },
+  ],
+} as const;
+
+const buildSiweDomain = (chainId: number, verifyingContract?: `0x${string}`): SiweTypedDataDomain => {
+  return {
+    name: "Sign-In with Ethereum",
+    version: "1",
+    chainId,
+    verifyingContract,
+  };
+};
 
 export const useWallet2 = () => {
   const { theme } = useContext(ThemeContext);
 
   const dispatch = useAppDispatch();
 
-  const [getCode] = useLazyGetCodeQuery();
+  const { address, isConnected, chainId } = useAccount();
+  const { connect, connectors, isPending: isWagmiConnecting } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { isPending: isSigning } = useSignMessage();
+  const { signTypedDataAsync } = useSignTypedData();
+
+  const [getCode, { isLoading: isCodeLoading }] = useLazyGetCodeQuery();
   const [login] = useLoginMutation();
 
-  const [isConnecting, setIsConnecting] = useState<boolean>(false);
-  const [isConnect, setIsConnect] = useState<boolean>(false);
-  const [address, setAddress] = useState<string | null>(null);
   const [isRestoring, setIsRestoring] = useState<boolean>(true);
 
-  const buildSiweTypedData = (params: {
-    appName: string;
-    chainId: number;
-    address: string;
-    domainHost: string;
-    originUrl: string;
-    nonce: string;
+  const isConnecting = isWagmiConnecting || isCodeLoading || isSigning;
+
+  const buildSiweMessage = (params: {
+    address: Address;
+    code: string;
+    chainId: number | bigint;
+    domain?: string;
+    uri?: string;
     statement?: string;
-    expirationTime?: string;
-    issuedAt?: string;
-  }) => {
-    const issuedAt = params.issuedAt ?? new Date().toISOString();
+  }): SiweMessage => {
+    const now = new Date();
+    const in15m = new Date(now.getTime() + 15 * 60 * 1000);
     return {
-      domain: { name: params.appName, version: "1", chainId: params.chainId },
-      types: {
-        EIP712Domain: [
-          { name: "name", type: "string" },
-          { name: "version", type: "string" },
-          { name: "chainId", type: "uint256" },
-        ],
-        SiweMessage: [
-          { name: "domain", type: "string" },
-          { name: "address", type: "adress" },
-          { name: "statement", type: "string" },
-          { name: "url", type: "string" },
-          { name: "version", type: "string" },
-          { chainId: "chainId", type: "uint256" },
-          { name: "nonce", type: "string" },
-          { name: "issuedAt", type: "string" },
-          { name: "expirationTime", type: "string" },
-        ],
-        primaryType: "SiweMessage" as const,
-        message: {
-          domain: params.domainHost,
-          address: params.address,
-          statement: params.statement ?? "Sign in to Gippy",
-          url: params.originUrl,
-          version: "1",
-          chainId: params.chainId,
-          nonce: params.nonce,
-          issuedAt,
-          expirationTime: params.expirationTime ?? new Date(Date.now() + 5 * 60_000).toISOString(),
-        },
-      },
+      domain: params.domain || (typeof window !== "undefined" ? window.location.host : "localhost"),
+      address: params.address,
+      statement: params.statement || "Вход на сайт",
+      uri: params.uri || (typeof window !== "undefined" ? window.location.origin : "http://localhost"),
+      version: "1",
+      chainId: typeof params.chainId === "bigint" ? params.chainId : BigInt(params.chainId),
+      nonce: params.code || PLACEHOLDER_NONCE,
+      issuedAt: now.toISOString(),
+      expirationTime: in15m.toISOString(),
+      notBefore: now.toISOString(),
+      requestId: "request-1",
+      resources: [typeof window !== "undefined" ? window.location.href : "http://localhost"] as readonly string[],
     };
   };
 
-  const restoreConnection = async () => {
+  const restoreConnection = useCallback(async () => {
     const savedAddress = localStorage.getItem("walletAddress");
     const savedSignature = localStorage.getItem("walletSignature");
 
     try {
-      // Если нет данных или MetaMask недоступен — сбрасываем
-      if (!savedAddress || !savedSignature || !window?.ethereum) {
+      if (!savedAddress || !savedSignature) {
         dispatch(resetWalletState());
-        setIsConnect(false);
-        setIsRestoring(false); // ✅ Восстановление завершено (ничего восстанавливать не надо)
+        setIsRestoring(false);
         return;
       }
 
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-
-      if (accounts.length === 0 || accounts[0].toLowerCase() !== savedAddress.toLowerCase()) {
+      if (!isConnected) {
         dispatch(resetWalletState());
-        localStorage.removeItem("walletAddress");
-        localStorage.removeItem("walletSignature");
-        localStorage.removeItem("loginTimestamp");
-        setIsConnect(false);
-        setIsRestoring(false); // ✅ Завершаем восстановление
-        return;
       }
 
-      const recovered = ethers.verifyMessage(SIGN_MESSAGE, savedSignature);
-      if (recovered.toLowerCase() !== savedAddress.toLowerCase()) {
-        dispatch(resetWalletState());
-        localStorage.clear();
-        setIsConnect(false);
-        setIsRestoring(false); // ✅
-        return;
+      if (isConnected && address && address.toLowerCase() === savedAddress.toLowerCase()) {
+        const userNames = JSON.parse(localStorage.getItem("userNames") || "{}");
+        const storedName = userNames?.[savedAddress.toLowerCase()] || null;
+
+        dispatch(
+          setWalletState({
+            address: getAddress(savedAddress),
+            error: null,
+            showNameModal: !storedName,
+            userName: storedName,
+          }),
+        );
       }
-
-      const userNames = JSON.parse(localStorage.getItem("userNames") || "{}");
-      const storedName = userNames?.[savedAddress.toLowerCase()] || null;
-
-      dispatch(
-        setWalletState({
-          address: getAddress(savedAddress),
-          error: null,
-          showNameModal: !storedName,
-          userName: storedName,
-        }),
-      );
-      setIsConnect(true);
-      setAddress(savedAddress);
     } catch (error) {
       console.error("Ошибка восстановления подключения:", error);
       dispatch(resetWalletState());
       localStorage.clear();
-      setIsConnect(false);
 
-      toast.error("Произошла ошибка при создании транзакции", {
+      toast.error("Произошла ошибка при восстановлении подключения", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
@@ -136,101 +146,139 @@ export const useWallet2 = () => {
         progress: undefined,
         theme: theme === "dark" ? "dark" : "light",
       });
-      // всё равно устанавливаем, что восстановление завершено
     } finally {
-      // ✅ В любом случае — восстановление закончено
       setIsRestoring(false);
     }
-  };
+  }, [isConnected, address, dispatch, theme]);
 
-  const connectWallet = useCallback(async () => {
-    try {
-      if (!window?.ethereum) {
-        return dispatch(
-          setWalletState({
-            error: "MetaMask не установлен",
-          }),
-        );
-      }
+  const authenticateWallet = useCallback(
+    async (walletAddress: string, chainId: number) => {
+      try {
+        const { code } = await getCode().unwrap();
 
-      setIsConnecting(true);
+        const message = buildSiweMessage({ address: address as `0x${string}`, code, chainId: chainId || 1 });
 
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
+        const domain = buildSiweDomain(chainId);
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+        // const signature = await signTypedDataAsync({
+        //   domain,
+        //   types: siweTypes,
+        //   primaryType: "SiweMessage",
+        //   message,
+        // });
 
-      const code = await getCode().unwrap();
+        const signature = await window.ethereum.request({
+          method: "personal_sign",
+          params: ["Hello world", address],
+        });
 
-      const signature = await signer.signMessage(SIGN_MESSAGE);
+        console.log("signature", signature);
 
-      const recoveredAddress = ethers.verifyMessage(SIGN_MESSAGE, signature);
+        // const valid = await verifyTypedData({
+        //   address: walletAddress as `0x${string}`,
+        //   domain,
+        //   types: siweTypes,
+        //   primaryType: "SiweMessage",
+        //   message,
+        //   signature: signature as `0x${string}`,
+        // });
 
-      if (recoveredAddress.toLowerCase() === accounts[0].toLowerCase()) {
-        const address = accounts[0];
+        // if (!valid) throw new Error("Неверная подпись");
 
-        const userNames = JSON.parse(localStorage.getItem("userNames") || "{}");
-        const storedName = userNames?.[address.toLowerCase()] || null;
-
-        await login({ address, signature, nonce: String(Date.now() + 1), code: "24" });
+        await login({
+          address: walletAddress,
+          signature,
+          nonce: "Hello world",
+          code,
+        }).unwrap();
 
         localStorage.setItem("code", code);
-        localStorage.setItem("walletAddress", address);
+        localStorage.setItem("walletAddress", walletAddress);
         localStorage.setItem("walletSignature", signature);
         localStorage.setItem("loginTimestamp", Date.now().toString());
 
+        const userNames = JSON.parse(localStorage.getItem("userNames") || "{}");
+        const storedName = userNames?.[walletAddress.toLowerCase()] || null;
+
         dispatch(
           setWalletState({
-            address: getAddress(address),
+            address: getAddress(walletAddress),
             error: null,
             showNameModal: !storedName,
             userName: storedName,
           }),
         );
 
-        setAddress(address);
-        setIsConnect(true);
-      }
-    } catch (err) {
-      console.error(err);
+        toast.success("Кошелек успешно подключен!", {
+          position: "top-center",
+          autoClose: 1000,
+          theme: theme === "dark" ? "dark" : "light",
+        });
+      } catch (error) {
+        console.error("Ошибка аутентификации:", error);
 
-      toast.error("Произошла ошибка при создании транзакции", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        toast.error("Ошибка аутентификации", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: theme === "dark" ? "dark" : "light",
+        });
+
+        disconnect();
+      }
+    },
+    [address, disconnect, dispatch, getCode, login, signTypedDataAsync, theme],
+  );
+
+  const connectWallet = useCallback(async () => {
+    try {
+      const connectorToUse = connectors.find(c => c.id === "injected" || c.name === "MetaMask");
+
+      if (!connectorToUse) {
+        toast.error("MetaMask не найден", {
+          theme: theme === "dark" ? "dark" : "light",
+        });
+        return;
+      }
+
+      connect({ connector: connectorToUse });
+    } catch (err) {
+      console.error("Ошибка подключения:", err);
+      toast.error("Ошибка при подключении кошелька", {
         theme: theme === "dark" ? "dark" : "light",
       });
-    } finally {
-      setIsConnecting(false);
     }
-  }, []);
+  }, [connectors, connect, theme]);
 
   const disconnectWallet = useCallback(() => {
     dispatch(resetWalletState());
 
+    disconnect();
+
     localStorage.removeItem("walletAddress");
     localStorage.removeItem("walletSignature");
     localStorage.removeItem("loginTimestamp");
-
-    setAddress(null);
-    setIsConnect(false);
   }, []);
 
   useEffect(() => {
-    restoreConnection(); // запускается при монтировании
-  }, []);
+    if (isConnected && address && chainId && isConnecting) {
+      authenticateWallet(address, chainId);
+    }
+  }, [isConnected, address, chainId, isConnecting]);
+
+  useEffect(() => {
+    restoreConnection();
+  }, [restoreConnection]);
 
   return {
     connectWallet,
     disconnectWallet,
     isConnecting,
-    isConnect,
+    isConnected,
     address,
     isRestoring,
   };
