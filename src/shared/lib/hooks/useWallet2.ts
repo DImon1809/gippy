@@ -1,13 +1,15 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getAddress } from "ethers";
-import { type Address, verifyTypedData } from "viem";
+import type { Address } from "viem";
+import { verifyTypedData } from "viem";
 import { useAccount, useConnect, useDisconnect, useSignMessage, useSignTypedData } from "wagmi";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppDispatch } from "@/app/store";
 import { useLazyGetCodeQuery, useLoginMutation } from "@/features/user/userApi";
 import { resetWalletState, setWalletState } from "@/features/wallet/walletSlice";
+import type { SiweMessage } from "@/shared/lib/types";
 
 type SiweTypedDataDomain = {
   name: string;
@@ -17,21 +19,6 @@ type SiweTypedDataDomain = {
 };
 
 const PLACEHOLDER_NONCE = "98cd232c777ab7b1";
-
-type SiweMessage = {
-  domain: string;
-  address: Address;
-  statement: string;
-  uri: string;
-  version: "1";
-  chainId: bigint;
-  nonce: string;
-  issuedAt: string;
-  expirationTime: string;
-  notBefore: string;
-  requestId: string;
-  resources: readonly string[];
-};
 
 const siweTypes = {
   SiweMessage: [
@@ -160,35 +147,28 @@ export const useWallet2 = () => {
 
         const domain = buildSiweDomain(chainId);
 
-        // const signature = await signTypedDataAsync({
-        //   domain,
-        //   types: siweTypes,
-        //   primaryType: "SiweMessage",
-        //   message,
-        // });
-
-        const signature = await window.ethereum.request({
-          method: "personal_sign",
-          params: ["Hello world", address],
+        const signature = await signTypedDataAsync({
+          domain,
+          types: siweTypes,
+          primaryType: "SiweMessage",
+          message,
         });
 
-        console.log("signature", signature);
+        const valid = await verifyTypedData({
+          address: walletAddress as `0x${string}`,
+          domain,
+          types: siweTypes,
+          primaryType: "SiweMessage",
+          message,
+          signature: signature as `0x${string}`,
+        });
 
-        // const valid = await verifyTypedData({
-        //   address: walletAddress as `0x${string}`,
-        //   domain,
-        //   types: siweTypes,
-        //   primaryType: "SiweMessage",
-        //   message,
-        //   signature: signature as `0x${string}`,
-        // });
-
-        // if (!valid) throw new Error("Неверная подпись");
+        if (!valid) throw new Error("Неверная подпись");
 
         await login({
           address: walletAddress,
           signature,
-          nonce: "Hello world",
+          nonce: { ...message, chainId: Number(message.chainId) },
           code,
         }).unwrap();
 
@@ -206,14 +186,11 @@ export const useWallet2 = () => {
             error: null,
             showNameModal: !storedName,
             userName: storedName,
+            signature,
+            code,
+            nonce: message,
           }),
         );
-
-        toast.success("Кошелек успешно подключен!", {
-          position: "top-center",
-          autoClose: 1000,
-          theme: theme === "dark" ? "dark" : "light",
-        });
       } catch (error) {
         console.error("Ошибка аутентификации:", error);
 
@@ -280,6 +257,7 @@ export const useWallet2 = () => {
     isConnecting,
     isConnected,
     address,
+    chainId,
     isRestoring,
   };
 };

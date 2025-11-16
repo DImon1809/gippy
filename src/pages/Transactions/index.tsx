@@ -1,30 +1,13 @@
-import { useContext } from "react";
+import React from "react";
 
-import { ThemeContext } from "@/app/providers/ThemeProvider";
-import { TransactionsTable } from "@/entities/TransactionsTable";
+import { PageLoader } from "@/shared";
 
-import styles from "./style.module.scss";
+const TransactionsComponent = React.lazy(() => import("./Transactions"));
 
 export const Transactions = () => {
-  const { theme } = useContext(ThemeContext);
-
   return (
-    <section className={`${styles.transactions} ${theme === "dark" ? styles.dark : ""}`}>
-      <header className={styles.transactions__header}>
-        <div>
-          <h3 className={`${styles.transactions__title} ${theme === "dark" ? styles.dark : ""}`}>
-            Transaction History
-          </h3>
-        </div>
-        <div>
-          <p
-            className={`${styles.transactions__description} ${theme === "dark" ? styles.dark : ""}`}
-          >
-            View and manage your transactions through Gippy
-          </p>
-        </div>
-      </header>
-      <TransactionsTable />
-    </section>
+    <React.Suspense fallback={<PageLoader />}>
+      <TransactionsComponent />
+    </React.Suspense>
   );
 };

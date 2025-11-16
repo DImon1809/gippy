@@ -1,6 +1,8 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
+import type { SiweMessage } from "@/shared/lib/types";
+
 type InitialState = {
   address: string | null;
   isConnected: boolean;
@@ -8,6 +10,9 @@ type InitialState = {
   error: string | null;
   showNameModal: boolean | null;
   userName: string | null;
+  signature: string;
+  nonce: SiweMessage | null;
+  code: string;
 };
 
 const initialState: InitialState = {
@@ -17,6 +22,9 @@ const initialState: InitialState = {
   error: null,
   showNameModal: null,
   userName: null,
+  signature: "",
+  nonce: null,
+  code: "",
 };
 
 export const walletSlice = createSlice({

@@ -1,8 +1,8 @@
 export type Message = {
-  id: string;
-  type: "user" | "ai" | "transaction";
+  id: number;
+  role: "user" | "assistant" | "transaction";
   content: string;
-  timestamp: Date;
+  sent_at: Date;
   isVoice?: boolean;
   transaction?: {
     transactionId?: string;

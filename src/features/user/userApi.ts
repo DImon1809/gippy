@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+import type { SiweMessage } from "@/shared/lib/types";
+
 export const userApi = createApi({
   reducerPath: "githubApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://217.26.30.64" }),
@@ -13,51 +15,36 @@ export const userApi = createApi({
       }),
     }),
 
-    login: builder.mutation<string, { address: string; signature: string; nonce: string; code: string }>({
-      query: data => ({
+    login: builder.mutation<
+      { accessToken: string; address: string; name: string; email: string; notRegistered?: boolean },
+      { address: string; signature: string; nonce: Omit<SiweMessage, "chainId"> & { chainId: number }; code: string }
+    >({
+      query: body => ({
         url: "/api/users/auth/login",
         method: "POST",
-        body: data,
-        // body: {
-        //   code: data.code,
-        //   address: "0x19C4535D4b50d7F327018FAe60a542BAC07734a7",
-        //   signature:
-        //     "0x81c56e6ea02ec8fedd1ce393b08a65f311c8d0c7aaf0033cac5e82fec9791a9f0f75d9cc609f2760adaf888a4e2175b114033efcd25fd107546895a18bad519a1b",
-        //   nonce: "Hello World",
-        // },
+        body,
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify(data),
-        // body: JSON.stringify({
-        //   address: "0x19C4535D4b50d7F327018FAe60a542BAC07734a7",
-        //   signature:
-        //     "0x81c56e6ea02ec8fedd1ce393b08a65f311c8d0c7aaf0033cac5e82fec9791a9f0f75d9cc609f2760adaf888a4e2175b114033efcd25fd107546895a18bad519a1b",
-        //   nonce: "Hello World",
-        // }),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
       }),
     }),
 
-    register: builder.mutation({
-      queryFn: async (body: { address: string; userName: string; email: string }) => {
-        const response = await fetch("http://localhost:4000/api/auth/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { data };
-      },
+    register: builder.mutation<
+      { accessToken: string; address: string; name: string; email: string },
+      {
+        signature: string;
+        address: string;
+        nonce: (Omit<SiweMessage, "chainId"> & { chainId: number }) | null;
+        code: string;
+        email: string;
+        name: string;
+      }
+    >({
+      query: body => ({
+        url: "/api/users/auth/register",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });

@@ -1,0 +1,48 @@
+import { useContext } from "react";
+
+import { ThemeContext } from "@/app/providers/ThemeProvider";
+import { BalanceCard } from "@/entities/BalanceCard";
+import { SupportDefaultCard } from "@/entities/SupportDefaultCard";
+import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
+
+import styles from "./style.module.scss";
+
+const statsData = [
+  { title: "Total Balance", value: "$124,567.89", change: "+12.5%" },
+  { title: "Active Positions", value: "8", change: "+2" },
+  { title: "Monthly Profit", value: "$8,432.10", change: "+18.2%" },
+  { title: "Rransactions Count", value: "156", change: "+24" },
+  { title: "Contacts Count", value: "42", change: "+5" },
+  { title: "Support Tickets", value: "3", change: "-1" },
+];
+
+const Support = () => {
+  const { theme } = useContext(ThemeContext);
+
+  const { address, isRestoring } = useWallet2();
+
+  if (isRestoring) return <div>Восстановление</div>;
+
+  return (
+    <section className={`${styles.support__dashboard} ${theme === "dark" ? styles.dark : ""}`}>
+      <header className={styles.support__header}>
+        <h3 className={`${styles.support__title} ${theme === "dark" ? styles.dark : ""}`}>Financial AI Dashboard</h3>
+        <p className={`${styles.support__description} ${theme === "dark" ? styles.dark : ""}`}>
+          Professional crypto asset management interface
+        </p>
+      </header>
+
+      {!!address && (
+        <section className={styles.stats__wrapper}>
+          {statsData.map((stat, index) => (
+            <BalanceCard key={index} stat={stat} />
+          ))}
+        </section>
+      )}
+
+      <SupportDefaultCard wallet={address!} />
+    </section>
+  );
+};
+
+export default Support;

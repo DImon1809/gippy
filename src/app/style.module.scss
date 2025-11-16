@@ -1,3 +1,8 @@
 .root__layout {
   display: flex;
+  background-color: #fff;
+
+  &.dark {
+    background-color: #000000;
+  }
 }

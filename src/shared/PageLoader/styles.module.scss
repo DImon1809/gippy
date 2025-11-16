@@ -1,0 +1,18 @@
+.page__loader {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 4px dotted #647479;
+  margin: 80px auto;
+  animation: rotate infinite linear 2s;
+
+  &.dark {
+    border: 4px dotted #60a5fad1;
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

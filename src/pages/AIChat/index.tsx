@@ -1,13 +1,13 @@
-import { AIHeader } from "@/entities/AIHeader";
-import { AIMessenger } from "@/entities/AIMessenger";
+import React from "react";
 
-import styles from "./style.module.scss";
+import { PageLoader } from "@/shared";
+
+const AIChatComponent = React.lazy(() => import("./AIChat"));
 
 export const AIChat = () => {
   return (
-    <section className={styles.AIChat}>
-      <AIHeader />
-      <AIMessenger />
-    </section>
+    <React.Suspense fallback={<PageLoader />}>
+      <AIChatComponent />
+    </React.Suspense>
   );
 };

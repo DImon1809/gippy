@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef } from "react";
 import React, { useCallback } from "react";
 
+import { ConfirmModal } from "@/entities/Modals/ConfirmModal";
 import { ContactModal } from "@/entities/Modals/ContactModal";
 import { RegistrationModal } from "@/entities/Modals/RegistrationModal";
 import { SettingsModal } from "@/entities/Modals/SettingsModal";
@@ -8,6 +9,7 @@ import { SettingsModal } from "@/entities/Modals/SettingsModal";
 import styles from "./style.module.scss";
 
 const modalsMap = {
+  confirm: ConfirmModal,
   settings: SettingsModal,
   contact: ContactModal,
   register: RegistrationModal,

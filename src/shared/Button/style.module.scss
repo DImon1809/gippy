@@ -15,6 +15,10 @@
   cursor: pointer;
   transition: all 0.3s ease;
 
+  &.disable {
+    pointer-events: none;
+  }
+
   &.outline {
     background-color: #fff;
     border: 1px solid #cccaca;
@@ -66,5 +70,19 @@
     &.dark.outline {
       color: #fff;
     }
+  }
+
+  .button__loader {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 3px dotted rgba(255, 255, 255, 0.7);
+    animation: rotate infinite linear 2s;
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
   }
 }

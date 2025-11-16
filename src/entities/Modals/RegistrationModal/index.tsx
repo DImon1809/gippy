@@ -4,10 +4,10 @@ import { Info } from "lucide-react";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
+import { useAppSelector } from "@/app/store";
 import { useRegisterMutation } from "@/features/user/userApi";
 import { XButton } from "@/shared";
 import { Button, Input } from "@/shared";
-import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import styles from "./style.module.scss";
 
@@ -15,7 +15,7 @@ export const RegistrationModal = () => {
   const { theme } = useContext(ThemeContext);
   const { closeModal } = useContext(ModalContext);
 
-  const { address } = useWallet2();
+  const { address, nonce, signature, code } = useAppSelector(state => state.walletSlice);
 
   const [register] = useRegisterMutation();
 
@@ -51,9 +51,12 @@ export const RegistrationModal = () => {
       }
 
       await register({
-        address: "24",
+        signature,
+        address,
+        nonce: nonce ? { ...nonce, chainId: Number(nonce?.chainId) } : null,
+        code,
+        name: userName,
         email,
-        userName,
       }).unwrap();
 
       toast.success(`Вы успешно зарегистрировались`, {

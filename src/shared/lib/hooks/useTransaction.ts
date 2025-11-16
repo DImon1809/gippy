@@ -151,13 +151,13 @@ export const useTransaction = () => {
       setAllMessages(prev => [
         ...prev,
         {
-          id: String(Date.now()),
-          type: "transaction",
+          id: Number(Date.now()),
+          role: "transaction",
           content: JSON.stringify({
             from: hrefSlicer(fromAddress),
             to: hrefSlicer(String(baseTx?.to ?? "")),
           }),
-          timestamp: new Date(),
+          sent_at: new Date(),
           transaction: {
             status: "pending",
           },
@@ -165,19 +165,18 @@ export const useTransaction = () => {
       ]);
 
       const txResponse = await signer.sendTransaction(finalTx);
-      console.log("Транзакция отправлена:", txResponse);
 
       setAllMessages(prev => {
         return [
           ...prev.slice(0, prev.length - 1),
           {
-            id: String(Date.now()),
-            type: "transaction",
+            id: Number(Date.now()),
+            role: "transaction",
             content: JSON.stringify({
               from: hrefSlicer(fromAddress),
               to: hrefSlicer(String(baseTx?.to ?? "")),
             }),
-            timestamp: new Date(),
+            sent_at: new Date(),
             transaction: {
               status: "processing",
             },
@@ -185,19 +184,17 @@ export const useTransaction = () => {
         ];
       });
 
-      const receipt = await txResponse.wait();
-
       setAllMessages(prev => {
         return [
           ...prev.slice(0, prev.length - 1),
           {
-            id: String(Date.now()),
-            type: "transaction",
+            id: Number(Date.now()),
+            role: "transaction",
             content: JSON.stringify({
               from: hrefSlicer(fromAddress),
               to: hrefSlicer(String(baseTx?.to ?? "")),
             }),
-            timestamp: new Date(),
+            sent_at: new Date(),
             transaction: {
               status: "success",
               transactionId: txResponse.hash,
@@ -205,8 +202,6 @@ export const useTransaction = () => {
           },
         ];
       });
-
-      console.log("receipt", receipt);
     } catch (err) {
       console.error(err);
 

@@ -12,6 +12,7 @@ type Props = {
   isEdit?: boolean;
   isLink?: boolean;
   isOutline?: boolean;
+  isLoading?: boolean;
   handleClick?: () => void;
 };
 
@@ -22,6 +23,7 @@ export const Button = ({
   isEdit = false,
   isLink = false,
   isOutline = false,
+  isLoading = false,
   handleClick,
 }: Props) => {
   const { theme } = useContext(ThemeContext);
@@ -31,9 +33,9 @@ export const Button = ({
       onClick={event => {
         event.preventDefault();
 
-        if (handleClick) handleClick();
+        if (!isLoading && handleClick) handleClick();
       }}
-      className={`${styles.button} ${isOutline ? styles.outline : ""} ${
+      className={`${styles.button} ${isLoading ? styles.disable : ""} ${isOutline ? styles.outline : ""} ${
         theme === "dark" ? styles.dark : ""
       } ${className}`}
     >
@@ -41,13 +43,17 @@ export const Button = ({
       {isEdit && <Edit size={16} className={styles.icon} />}
       {isLink && <ExternalLink size={16} className={styles.icon} />}
 
-      <span
-        className={`${styles.button__text}  ${isOutline ? styles.outline : ""} ${
-          theme === "dark" ? styles.dark : ""
-        }`}
-      >
-        {children}
-      </span>
+      {!isLoading ? (
+        <span
+          className={`${styles.button__text}  ${isOutline ? styles.outline : ""} ${
+            theme === "dark" ? styles.dark : ""
+          }`}
+        >
+          {children}
+        </span>
+      ) : (
+        <div className={styles.button__loader}></div>
+      )}
     </div>
   );
 };

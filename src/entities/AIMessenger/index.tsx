@@ -5,7 +5,8 @@ import { Mic, Send } from "lucide-react";
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppSelector } from "@/app/store";
-import { useSendMyMessageMutation } from "@/features/message/messageApi";
+import { useGetHistoryMessageQuery, useSendMyMessageMutation } from "@/features/message/messageApi";
+import { PageLoader } from "@/shared";
 import type { Message } from "@/shared/config/Message";
 import { useTransaction } from "@/shared/lib/hooks/useTransaction";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
@@ -19,13 +20,21 @@ import { TypingMessage } from "./ui/TypingMessage";
 
 import styles from "./style.module.scss";
 
+const defaultMessage: Message = {
+  id: 1,
+  role: "assistant",
+  content:
+    "🤗 Привет! Я Gippy — твой дружелюбный помощник по финансам и криптовалютам. Вот несколько вещей, которыми могу помочь: 💰 **Финансы и инвестиции:** консультации по криптовалютам, советы по трейдингу и инвестированию. 📊 **Технический анализ:** помощь в понимании графиков и рыночных трендов. 🔮 **Блокчейн и DeFi:** объяснение технологий блокчейна, токенов и DeFi-приложений. 🛠️ **Программирование и разработка:** подсказки по созданию смарт-контрактов и DApps. 📌 **Общий совет и обучение:** финансовые стратегии, экономическая аналитика и многое другое! Что именно тебя интересует сейчас? 😊",
+  sent_at: new Date(),
+};
+
 export const AIMessenger = () => {
   const { theme } = useContext(ThemeContext);
   const { openModal } = useContext(ModalContext);
 
   const { prepareAndSendTransaction } = useTransaction();
 
-  const { address } = useWallet2();
+  const { address, chainId } = useWallet2();
 
   const { isAuthorized } = useAppSelector(state => state.userSlice);
 
@@ -37,19 +46,22 @@ export const AIMessenger = () => {
   const [isSendButton, setIsSendButton] = useState<boolean>(false);
   const [myMessage, setMyMessage] = useState("");
   const [displayedText, setDisplayedText] = useState("");
-  const [allMessages, setAllMessages] = useState<Message[]>([
-    {
-      id: "1",
-      type: "ai",
-      content:
-        "🤗 Привет! Я Gippy — твой дружелюбный помощник по финансам и криптовалютам. Вот несколько вещей, которыми могу помочь: 💰 **Финансы и инвестиции:** консультации по криптовалютам, советы по трейдингу и инвестированию. 📊 **Технический анализ:** помощь в понимании графиков и рыночных трендов. 🔮 **Блокчейн и DeFi:** объяснение технологий блокчейна, токенов и DeFi-приложений. 🛠️ **Программирование и разработка:** подсказки по созданию смарт-контрактов и DApps. 📌 **Общий совет и обучение:** финансовые стратегии, экономическая аналитика и многое другое! Что именно тебя интересует сейчас? 😊",
-      timestamp: new Date(),
-    },
-  ]);
-
-  const [sendMyMessage, { data, isLoading }] = useSendMyMessageMutation();
+  const [allMessages, setAllMessages] = useState<Message[]>([defaultMessage]);
+  const [isGetHistoryError, setIsGetHistoryError] = useState<boolean>(false);
 
   const initialTextareaHeight = useRef<number>(0);
+
+  const [sendMyMessage, { data, isLoading }] = useSendMyMessageMutation();
+  const {
+    data: messages,
+    isError,
+    isLoading: isLoadingMessages,
+  } = useGetHistoryMessageQuery(
+    { session_id: address! },
+    {
+      skip: !address,
+    },
+  );
 
   const handleSendMessage = async () => {
     try {
@@ -79,14 +91,14 @@ export const AIMessenger = () => {
       setAllMessages(prev => [
         ...prev,
         {
-          id: String(Date.now()),
-          type: "user",
+          id: Number(Date.now()),
+          role: "user",
           content: copyMessage,
-          timestamp: new Date(),
+          sent_at: new Date(),
         },
       ]);
 
-      await sendMyMessage({ query: copyMessage, session_id: address }).unwrap();
+      await sendMyMessage({ query: copyMessage, session_id: address, chainId }).unwrap();
     } catch {
       toast.error("Произошла ошибка при отправке сообщения", {
         position: "top-center",
@@ -105,10 +117,10 @@ export const AIMessenger = () => {
     setAllMessages(prev => [
       ...prev,
       {
-        id: String(Date.now()),
-        type: "ai",
+        id: Number(Date.now()),
+        role: "assistant",
         content: text,
-        timestamp: new Date(),
+        sent_at: new Date(),
       },
     ]);
 
@@ -130,6 +142,28 @@ export const AIMessenger = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (!isGetHistoryError && isError) {
+      setIsGetHistoryError(true);
+
+      toast.error("Произошла ошибка при получении истории сообщений", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: theme === "dark" ? "dark" : "light",
+      });
+    }
+
+    if (!isError && address && messages?.messages) {
+      setAllMessages([defaultMessage, ...messages.messages]);
+      setIsGetHistoryError(false);
+    }
+  }, [messages, address, isError, isGetHistoryError, theme]);
 
   useEffect(() => {
     if (data?.transaction && isDone) {
@@ -197,26 +231,30 @@ export const AIMessenger = () => {
   return (
     <section className={`${styles.AIMessenger} ${theme === "dark" ? styles.dark : ""}`}>
       <div className={styles.chat} ref={chatRef}>
-        <div>
-          {allMessages.map((message, index) => {
-            return (
-              <div
-                key={index}
-                className={`${styles.message__wrapper} ${message.type === "user" ? styles.user : styles.ai}`}
-              >
-                {message.type === "transaction" && message?.transaction?.status === "pending" ? (
-                  <PendingBlock message={message} />
-                ) : message.type === "transaction" && message?.transaction?.status === "processing" ? (
-                  <ProcessingTransaction message={message} />
-                ) : message.type === "transaction" && message?.transaction?.status === "success" ? (
-                  <TransactionSuccessful message={message} />
-                ) : (
-                  <SimpleMessage message={message} />
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {isLoadingMessages ? (
+          <PageLoader />
+        ) : (
+          <div>
+            {allMessages.map((message, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`${styles.message__wrapper} ${message.role === "user" ? styles.user : styles.ai}`}
+                >
+                  {message.role === "transaction" && message?.transaction?.status === "pending" ? (
+                    <PendingBlock message={message} />
+                  ) : message.role === "transaction" && message?.transaction?.status === "processing" ? (
+                    <ProcessingTransaction message={message} />
+                  ) : message.role === "transaction" && message?.transaction?.status === "success" ? (
+                    <TransactionSuccessful message={message} />
+                  ) : (
+                    <SimpleMessage message={message} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className={`${styles.message__wrapper} ${styles.ai}`}>
           {!isDone && isLoading && <GippyThink />}

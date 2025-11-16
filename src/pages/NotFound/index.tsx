@@ -1,16 +1,13 @@
 import React from "react";
-import { useContext } from "react";
 
-import { ThemeContext } from "@/app/providers/ThemeProvider";
+import { PageLoader } from "@/shared";
 
-import styles from "./style.module.scss";
+const NotFoundComponent = React.lazy(() => import("./NotFound"));
 
 export const NotFound = () => {
-  const { theme } = useContext(ThemeContext);
-
   return (
-    <section className={`${styles.not__found} ${theme === "dark" ? styles.dark : ""}`}>
-      <h3>Страница не найдена</h3>
-    </section>
+    <React.Suspense fallback={<PageLoader />}>
+      <NotFoundComponent />
+    </React.Suspense>
   );
 };

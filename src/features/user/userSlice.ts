@@ -25,7 +25,12 @@ export const userSlice = createSlice({
   reducers: {
     loguot: () => {
       localStorage.removeItem("jwtToken");
+      localStorage.removeItem("userName");
       return initialState;
+    },
+
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.userName = action.payload;
     },
 
     setAuthStatus: (state, action: PayloadAction<string>) => {
@@ -38,10 +43,24 @@ export const userSlice = createSlice({
     builder
       .addMatcher(
         userApi.endpoints.login.matchFulfilled,
-        (state, action: PayloadAction<{ accessToken: string; address: string }>) => {
-          state.isAuthorized = true;
-          state.address = action.payload.address;
-          state.jwtToken = action.payload.accessToken;
+        (
+          state,
+          action: PayloadAction<{
+            accessToken: string;
+            address: string;
+            name: string;
+            email: string;
+            notRegistered?: boolean;
+          }>,
+        ) => {
+          if (action.payload?.notRegistered) {
+            state.isAuthorized = false;
+          } else {
+            state.isAuthorized = true;
+            state.address = action.payload.address;
+            state.jwtToken = action.payload.accessToken;
+            state.userName = action.payload.name;
+          }
         },
       )
       .addMatcher(
@@ -55,4 +74,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { loguot, setAuthStatus } = userSlice.actions;
+export const { loguot, setAuthStatus, setUserName } = userSlice.actions;

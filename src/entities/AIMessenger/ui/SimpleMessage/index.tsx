@@ -15,7 +15,9 @@ export const SimpleMessage = ({ message }: Props) => {
   const { theme } = useContext(ThemeContext);
 
   return (
-    <div className={`${styles.message} ${message.type === "ai" ? `${styles.ai} ${theme === "dark" ? styles.dark : ""}` : styles.user}`}>
+    <div
+      className={`${styles.message} ${message.role === "assistant" ? `${styles.ai} ${theme === "dark" ? styles.dark : ""}` : styles.user}`}
+    >
       {message.content.split("\n").map((content, index) => {
         return (
           <p className={`${index > 0 ? styles.row : ""}`} key={index}>
@@ -23,12 +25,12 @@ export const SimpleMessage = ({ message }: Props) => {
           </p>
         );
       })}
-      <div className={`${styles.sender} ${message.type === "ai" ? styles.ai : styles.user}`}>
-        {message.type === "ai" ? <GippyLogo size={32} /> : <UserLogo />}
+      <div className={`${styles.sender} ${message.role === "assistant" ? styles.ai : styles.user}`}>
+        {message.role === "assistant" ? <GippyLogo size={32} /> : <UserLogo />}
       </div>
 
-      <div className={`${styles.time} ${message.type === "ai" ? styles.ai : styles.user}`}>
-        <span>{new Date(message.timestamp).toTimeString().slice(0, 5)}</span>
+      <div className={`${styles.time} ${message.role === "assistant" ? styles.ai : styles.user}`}>
+        <span>{new Date(message.sent_at).toTimeString().slice(0, 5)}</span>
       </div>
     </div>
   );

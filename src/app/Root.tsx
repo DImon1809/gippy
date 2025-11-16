@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { setAuthStatus } from "@/features/user/userSlice";
+import { ThemeContext } from "@/app/providers/ThemeProvider";
+import { useAppDispatch } from "@/app/store";
+import { setAuthStatus, setUserName } from "@/features/user/userSlice";
 import { AIChat } from "@/pages/AIChat";
 import { Contacts } from "@/pages/Contacts";
 import { NotFound } from "@/pages/NotFound";
@@ -10,25 +12,30 @@ import { Transactions } from "@/pages/Transactions";
 import { Wallet } from "@/pages/Wallet";
 import { Sidebar } from "@/widgets/Sidebar";
 
-import { useAppDispatch } from "./store";
-
 import styles from "./style.module.scss";
 
 export const Root = () => {
+  const { theme } = useContext(ThemeContext);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwtToken");
+    const userName = localStorage.getItem("userName");
 
     if (jwtToken) {
       dispatch(setAuthStatus(jwtToken));
+    }
+
+    if (userName) {
+      dispatch(setUserName(userName));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <div className={styles.root__layout}>
+      <div className={`${styles.root__layout} ${theme === "dark" ? styles.dark : ""}`}>
         <Sidebar />
 
         <Routes>
