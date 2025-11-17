@@ -12,6 +12,7 @@ import { Transactions } from "@/pages/Transactions";
 import { Wallet } from "@/pages/Wallet";
 import { Sidebar } from "@/widgets/Sidebar";
 
+import "@rainbow-me/rainbowkit/styles.css";
 import styles from "./style.module.scss";
 
 export const Root = () => {

@@ -11,7 +11,7 @@ type InitialState = {
   showNameModal: boolean | null;
   userName: string | null;
   signature: string;
-  nonce: SiweMessage | null;
+  nonce: (Omit<SiweMessage, "chainId"> & { chainId: number }) | null;
   code: string;
 };
 

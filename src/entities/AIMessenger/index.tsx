@@ -36,7 +36,7 @@ export const AIMessenger = () => {
 
   const { address, chainId } = useWallet2();
 
-  const { isAuthorized } = useAppSelector(state => state.userSlice);
+  const { isAuthorized, jwtToken } = useAppSelector(state => state.userSlice);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -52,6 +52,7 @@ export const AIMessenger = () => {
   const initialTextareaHeight = useRef<number>(0);
 
   const [sendMyMessage, { data, isLoading }] = useSendMyMessageMutation();
+
   const {
     data: messages,
     isError,
@@ -59,7 +60,7 @@ export const AIMessenger = () => {
   } = useGetHistoryMessageQuery(
     { session_id: address! },
     {
-      skip: !address,
+      skip: !(!!address && !!isAuthorized && !!jwtToken),
     },
   );
 
@@ -144,7 +145,7 @@ export const AIMessenger = () => {
   };
 
   useEffect(() => {
-    if (!isGetHistoryError && isError) {
+    if (!isGetHistoryError && isError && isAuthorized) {
       setIsGetHistoryError(true);
 
       toast.error("Произошла ошибка при получении истории сообщений", {
@@ -159,11 +160,11 @@ export const AIMessenger = () => {
       });
     }
 
-    if (!isError && address && messages?.messages) {
+    if (!isError && address && messages?.messages && isAuthorized) {
       setAllMessages([defaultMessage, ...messages.messages]);
       setIsGetHistoryError(false);
     }
-  }, [messages, address, isError, isGetHistoryError, theme]);
+  }, [messages, address, isError, isGetHistoryError, theme, isAuthorized]);
 
   useEffect(() => {
     if (data?.transaction && isDone) {

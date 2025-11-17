@@ -8,6 +8,7 @@ import { useAccount, useConnect, useDisconnect, useSignMessage, useSignTypedData
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppDispatch } from "@/app/store";
 import { useLazyGetCodeQuery, useLoginMutation } from "@/features/user/userApi";
+import { loguot } from "@/features/user/userSlice";
 import { resetWalletState, setWalletState } from "@/features/wallet/walletSlice";
 import type { SiweMessage } from "@/shared/lib/types";
 
@@ -61,8 +62,9 @@ export const useWallet2 = () => {
   const [login] = useLoginMutation();
 
   const [isRestoring, setIsRestoring] = useState<boolean>(true);
+  const [isManualLoading, setIsManualLoading] = useState<boolean>(false);
 
-  const isConnecting = isWagmiConnecting || isCodeLoading || isSigning;
+  const isConnecting = isWagmiConnecting || isCodeLoading || isSigning || isManualLoading;
 
   const buildSiweMessage = (params: {
     address: Address;
@@ -188,9 +190,14 @@ export const useWallet2 = () => {
             userName: storedName,
             signature,
             code,
-            nonce: message,
+            nonce: {
+              ...message,
+              chainId: Number(message.chainId),
+            },
           }),
         );
+
+        setIsManualLoading(false);
       } catch (error) {
         console.error("Ошибка аутентификации:", error);
 
@@ -205,6 +212,7 @@ export const useWallet2 = () => {
           theme: theme === "dark" ? "dark" : "light",
         });
 
+        setIsManualLoading(false);
         disconnect();
       }
     },
@@ -233,6 +241,7 @@ export const useWallet2 = () => {
 
   const disconnectWallet = useCallback(() => {
     dispatch(resetWalletState());
+    dispatch(loguot());
 
     disconnect();
 
@@ -254,6 +263,7 @@ export const useWallet2 = () => {
   return {
     connectWallet,
     disconnectWallet,
+    setIsManualLoading,
     isConnecting,
     isConnected,
     address,
