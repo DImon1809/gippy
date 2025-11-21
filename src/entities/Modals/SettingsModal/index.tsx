@@ -28,9 +28,7 @@ export const SettingsModal = () => {
     <section className={`${styles.settings__modal} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.header}>
         <div>
-          <h2 className={`${styles.settings__title} ${theme === "dark" ? styles.dark : ""}`}>
-            Settings
-          </h2>
+          <h2 className={`${styles.settings__title} ${theme === "dark" ? styles.dark : ""}`}>Settings</h2>
         </div>
         <XButton handler={closeModal} />
       </header>
@@ -42,21 +40,13 @@ export const SettingsModal = () => {
           <div className={styles.content__wrapper}>
             <div className={styles.content__row}>
               <div>
-                <h3
-                  className={`${styles.content__row__title} ${theme === "dark" ? styles.dark : ""}`}
-                >
-                  Language
-                </h3>
+                <h3 className={`${styles.content__row__title} ${theme === "dark" ? styles.dark : ""}`}>Language</h3>
               </div>
               <ParamSelector options={["English", "Russian"]} />
             </div>
             <div className={styles.content__row}>
               <div>
-                <h3
-                  className={`${styles.content__row__title} ${theme === "dark" ? styles.dark : ""}`}
-                >
-                  Theme
-                </h3>
+                <h3 className={`${styles.content__row__title} ${theme === "dark" ? styles.dark : ""}`}>Theme</h3>
               </div>
               <ParamSelector
                 options={theme === "dark" ? ["Dark", "Light"] : ["Light", "Dark"]}
@@ -65,9 +55,7 @@ export const SettingsModal = () => {
             </div>
           </div>
         ) : (
-          <div
-            className={`${styles.promising__inscription} ${theme === "dark" ? styles.dark : ""}`}
-          >
+          <div className={`${styles.promising__inscription} ${theme === "dark" ? styles.dark : ""}`}>
             <h3>{`${direction === "Profile" ? "Profile" : "About"} settings coming soon...`}</h3>
           </div>
         )}

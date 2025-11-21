@@ -2,6 +2,7 @@ import { type TypedUseSelectorHook, useDispatch, useSelector } from "react-redux
 import { configureStore } from "@reduxjs/toolkit";
 
 import { authMiddleware } from "@/app/providers/middleware/authMiddleware";
+import { messageSlice } from "@/features/message/messageSlice";
 import { serviceApi } from "@/features/serviceApi";
 import { userApi } from "@/features/user/userApi";
 import { userSlice } from "@/features/user/userSlice";
@@ -15,6 +16,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [walletSlice.reducerPath]: walletSlice.reducer,
     [userSlice.reducerPath]: userSlice.reducer,
+    [messageSlice.reducerPath]: messageSlice.reducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(apiMiddleware),
   devTools: { name: "Gippy" },

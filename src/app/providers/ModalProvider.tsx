@@ -5,11 +5,13 @@ import { ConfirmModal } from "@/entities/Modals/ConfirmModal";
 import { ContactModal } from "@/entities/Modals/ContactModal";
 import { RegistrationModal } from "@/entities/Modals/RegistrationModal";
 import { SettingsModal } from "@/entities/Modals/SettingsModal";
+import { TariffsModal } from "@/entities/Modals/TariffsModal";
 
 import styles from "./style.module.scss";
 
 const modalsMap = {
   confirm: ConfirmModal,
+  tariffs: TariffsModal,
   settings: SettingsModal,
   contact: ContactModal,
   register: RegistrationModal,

@@ -3,8 +3,9 @@ import { toast } from "react-toastify";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
-import { useAppSelector } from "@/app/store";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { useClearHistoryMessageMutation } from "@/features/message/messageApi";
+import { setIsHaveMessages } from "@/features/message/messageSlice";
 import { Button, XButton } from "@/shared";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
@@ -13,6 +14,8 @@ import styles from "./style.module.scss";
 export const ConfirmModal = () => {
   const { theme } = useContext(ThemeContext);
   const { closeModal } = useContext(ModalContext);
+
+  const dispatch = useAppDispatch();
 
   const { isAuthorized } = useAppSelector(state => state.userSlice);
 
@@ -24,6 +27,8 @@ export const ConfirmModal = () => {
     try {
       if (address && isAuthorized) {
         await clearHistoryMessage({ session_id: address }).unwrap();
+
+        dispatch(setIsHaveMessages(false));
 
         closeModal();
       }

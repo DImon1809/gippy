@@ -16,17 +16,12 @@ type Props = {
   setCurrentContact: Dispatch<SetStateAction<Contact | undefined>>;
 };
 
-export const ContactList = ({
-  contacts,
-  initinalContacts,
-  setContacts,
-  setCurrentContact,
-}: Props) => {
+export const ContactList = ({ contacts, initinalContacts, setContacts, setCurrentContact }: Props) => {
   const { theme } = useContext(ThemeContext);
 
   const { openModal } = useContext(ModalContext);
 
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string | null>(null);
 
   useEffect(() => {
     if (search) {
@@ -51,10 +46,7 @@ export const ContactList = ({
     <section>
       <header className={styles.contact__list__header}>
         <Input isSearch={true} placeholder="Search contacts" setValue={setSearch} />
-        <Button
-          isAdd={true}
-          handleClick={() => openModal("contact", { isEdit: false, setContacts: setContacts })}
-        >
+        <Button isAdd={true} handleClick={() => openModal("contact", { isEdit: false, setContacts: setContacts })}>
           Add contact
         </Button>
       </header>
@@ -73,9 +65,7 @@ export const ContactList = ({
               onClick={() => setCurrentContact(contacts?.find(c => c.id === contact.id))}
             >
               <div>
-                <h4 className={`${styles.contact__name} ${theme === "dark" ? styles.dark : ""}`}>
-                  {contact.name}
-                </h4>
+                <h4 className={`${styles.contact__name} ${theme === "dark" ? styles.dark : ""}`}>{contact.name}</h4>
               </div>
               <div className={styles.address}>
                 <p className={`${styles.address__text} ${theme === "dark" ? styles.dark : ""}`}>
@@ -86,9 +76,7 @@ export const ContactList = ({
                 </p>
               </div>
               <div>
-                <p className={`${styles.description} ${theme === "dark" ? styles.dark : ""}`}>
-                  {contact.description}
-                </p>
+                <p className={`${styles.description} ${theme === "dark" ? styles.dark : ""}`}>{contact.description}</p>
               </div>
               <div className={`${styles.wrapper} ${theme === "dark" ? styles.dark : ""}`}>
                 <span>{contact.dateAdded}</span>

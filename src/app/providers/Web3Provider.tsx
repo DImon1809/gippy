@@ -1,11 +1,12 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useContext } from "react";
 import { Provider } from "react-redux";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { darkTheme, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { arbitrum, base, mainnet, optimism, polygon, sepolia } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
+import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { store } from "@/app/store";
 
 type Props = {
@@ -28,13 +29,15 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 export const Web3Provider = ({ children }: Props) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <Provider store={store}>
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          {/* {children} */}
           <RainbowKitProvider
-          // modalSize="compact"
+            // modalSize="compact"
+            theme={theme === "dark" ? darkTheme() : lightTheme()}
           >
             {children}
           </RainbowKitProvider>

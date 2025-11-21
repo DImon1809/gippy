@@ -4,8 +4,9 @@ import { Mic, Send } from "lucide-react";
 
 import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
-import { useAppSelector } from "@/app/store";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { useGetHistoryMessageQuery, useSendMyMessageMutation } from "@/features/message/messageApi";
+import { setIsHaveMessages } from "@/features/message/messageSlice";
 import { PageLoader } from "@/shared";
 import type { Message } from "@/shared/config/Message";
 import { useTransaction } from "@/shared/lib/hooks/useTransaction";
@@ -31,6 +32,8 @@ const defaultMessage: Message = {
 export const AIMessenger = () => {
   const { theme } = useContext(ThemeContext);
   const { openModal } = useContext(ModalContext);
+
+  const dispatch = useAppDispatch();
 
   const { prepareAndSendTransaction } = useTransaction();
 
@@ -100,6 +103,8 @@ export const AIMessenger = () => {
       ]);
 
       await sendMyMessage({ query: copyMessage, session_id: address, chainId }).unwrap();
+
+      dispatch(setIsHaveMessages(true));
     } catch {
       toast.error("Произошла ошибка при отправке сообщения", {
         position: "top-center",
@@ -163,7 +168,13 @@ export const AIMessenger = () => {
     if (!isError && address && messages?.messages && isAuthorized) {
       setAllMessages([defaultMessage, ...messages.messages]);
       setIsGetHistoryError(false);
+
+      if (messages.messages.length) dispatch(setIsHaveMessages(true));
+
+      return;
     }
+
+    dispatch(setIsHaveMessages(false));
   }, [messages, address, isError, isGetHistoryError, theme, isAuthorized]);
 
   useEffect(() => {

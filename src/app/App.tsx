@@ -9,15 +9,15 @@ import { Web3Provider } from "./providers/Web3Provider";
 
 export const App = () => {
   return (
-    <Web3Provider>
-      <BrowserRouter>
-        <ThemeProvider>
+    <ThemeProvider>
+      <Web3Provider>
+        <BrowserRouter>
           <ModalProvider>
             <Root />
             <ToastContainer />
           </ModalProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-    </Web3Provider>
+        </BrowserRouter>
+      </Web3Provider>
+    </ThemeProvider>
   );
 };
