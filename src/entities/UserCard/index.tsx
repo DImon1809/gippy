@@ -19,7 +19,9 @@ export const UserCard = ({ isDecrease }: Props) => {
       <div className={styles.user}>{userName ? userName.split("")[0].toUpperCase() : "U"}</div>
       <div className={`${styles.name__description} ${isDecrease ? styles.decrease : ""}`}>
         <span>{userName ? (userName.length > 8 ? `${userName.slice(0, 8)}...` : userName) : "User"}</span>
-        <span className={`${styles.description} ${theme === "dark" ? styles.dark : ""}`}>offline</span>
+        <span className={`${styles.description} ${theme === "dark" ? styles.dark : ""}`}>
+          {userName ? "online" : "offline"}
+        </span>
       </div>
     </div>
   );

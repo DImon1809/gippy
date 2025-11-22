@@ -29,7 +29,7 @@ const tariffsCards: TariffsCard[] = [
   },
   {
     status: "sample",
-    isPopular: true,
+    isPopular: false,
     title: "To Go",
     items: [
       "20 транзакций в день",
@@ -41,7 +41,7 @@ const tariffsCards: TariffsCard[] = [
   },
   {
     status: "active",
-    isPopular: false,
+    isPopular: true,
     title: "Pro",
     items: [
       "Транзакции без ограничений",
@@ -58,14 +58,14 @@ export const TariffsModal = () => {
   const { theme } = useContext(ThemeContext);
 
   return (
-    <div className={styles.tariffs__modal}>
+    <div className={`${styles.tariffs__modal} ${theme === "dark" ? styles.dark : ""}`}>
       <header className={styles.header}>
         <div>
           <h2 className={`${styles.tariffs__title} ${theme === "dark" ? styles.dark : ""}`}>Tariffs</h2>
         </div>
         <XButton handler={closeModal} />
       </header>
-      <div>
+      <div className={styles.card__wrapper}>
         {tariffsCards.map((tariff, i) => (
           <Card tariff={tariff} key={i} />
         ))}
