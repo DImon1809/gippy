@@ -1,10 +1,9 @@
 import { type ReactNode, useContext } from "react";
 import { Provider } from "react-redux";
-import { darkTheme, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { darkTheme, getDefaultConfig, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createConfig, http, WagmiProvider } from "wagmi";
+import { http, WagmiProvider } from "wagmi";
 import { arbitrum, base, mainnet, optimism, polygon, sepolia } from "wagmi/chains";
-import { injected } from "wagmi/connectors";
 
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { store } from "@/app/store";
@@ -13,9 +12,12 @@ type Props = {
   children: ReactNode;
 };
 
-const wagmiConfig = createConfig({
+const walletConnectProjectId = "b1cbefc5c4d4dcac59b81968e4c7924c";
+
+const config = getDefaultConfig({
+  appName: "My RainbowKit App",
+  projectId: walletConnectProjectId,
   chains: [mainnet, polygon, arbitrum, optimism, base, sepolia],
-  connectors: [injected()],
   transports: {
     [mainnet.id]: http("https://rpc.ankr.com/eth"),
     [polygon.id]: http("https://rpc.ankr.com/polygon"),
@@ -33,7 +35,7 @@ export const Web3Provider = ({ children }: Props) => {
 
   return (
     <Provider store={store}>
-      <WagmiProvider config={wagmiConfig}>
+      <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider
             // modalSize="compact"
