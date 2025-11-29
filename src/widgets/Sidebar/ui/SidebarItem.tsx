@@ -12,16 +12,17 @@ type Props = {
   description: string;
   isActive: boolean;
   isDecrease: boolean;
+  isDisabled: boolean;
   navigateForPage: (name: string) => void;
 };
 
-export const SidebarItem = ({ Icon, name, description, isActive, isDecrease, navigateForPage }: Props) => {
+export const SidebarItem = ({ Icon, name, description, isActive, isDecrease, isDisabled, navigateForPage }: Props) => {
   const { theme } = useContext(ThemeContext);
 
   const { openModal } = useContext(ModalContext);
 
   const handleClick = () => {
-    if (name === "Positions") return;
+    if (isDisabled) return;
 
     if (name === "Settings") return openModal("settings", null);
 
@@ -31,7 +32,7 @@ export const SidebarItem = ({ Icon, name, description, isActive, isDecrease, nav
   return (
     <div
       className={`${styles.sidebar__item} ${theme === "dark" ? styles.dark : ""} ${isActive ? styles.active : ""} ${
-        name === "Positions" ? styles.disable : ""
+        isDisabled ? styles.disable : ""
       } ${isDecrease ? styles.decrease : ""}`}
       onClick={handleClick}
     >

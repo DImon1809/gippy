@@ -15,6 +15,7 @@ interface NavigationItem {
   name: string;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
+  isDisabled: boolean;
   description: string;
 }
 
@@ -24,6 +25,7 @@ const navigationItems: NavigationItem[] = [
     name: "AI Chat",
     icon: MessageCircle,
     href: "/",
+    isDisabled: false,
     description: "Chat with Gippy for crypto",
   },
   {
@@ -31,6 +33,7 @@ const navigationItems: NavigationItem[] = [
     name: "Wallet",
     icon: Wallet,
     href: "/wallet",
+    isDisabled: true,
     description: "Tottal crypto asset balance",
   },
   {
@@ -38,6 +41,7 @@ const navigationItems: NavigationItem[] = [
     name: "Transactions",
     icon: Receipt,
     href: "/transactions",
+    isDisabled: true,
     description: "All wallet transactions",
   },
   {
@@ -45,6 +49,7 @@ const navigationItems: NavigationItem[] = [
     name: "Contacts",
     icon: Users,
     href: "/contacts",
+    isDisabled: true,
     description: "Contact graph with name",
   },
   {
@@ -52,6 +57,7 @@ const navigationItems: NavigationItem[] = [
     name: "Positions",
     icon: TrendingUp,
     href: "/positions",
+    isDisabled: true,
     description: "Open lending positions",
   },
   {
@@ -59,6 +65,7 @@ const navigationItems: NavigationItem[] = [
     name: "Support",
     icon: Headphones,
     href: "/support",
+    isDisabled: true,
     description: "Contact options",
   },
   {
@@ -66,6 +73,7 @@ const navigationItems: NavigationItem[] = [
     name: "Settings",
     icon: Settings,
     href: "/settings",
+    isDisabled: false,
     description: "System appearance",
   },
 ];
@@ -143,6 +151,7 @@ export const Sidebar = () => {
               description={item.description}
               isActive={item.href === location.pathname}
               isDecrease={isDecrease}
+              isDisabled={item.isDisabled}
               navigateForPage={navigateForPage}
             />
           );

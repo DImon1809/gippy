@@ -8,3 +8,12 @@ export type Transaction = {
   nonce: number | string | null;
   gasPrice: string | number | null;
 };
+
+export type ResponseSendMessage = {
+  response: string;
+  session_id: string;
+  status: string;
+  timestamp: string;
+  tokenAddress: string | null;
+  transaction: Transaction | null;
+};

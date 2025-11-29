@@ -1,16 +1,32 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useContext } from "react";
 import { toast } from "react-toastify";
-import { ethers } from "ethers";
+import { ethers, parseUnits } from "ethers";
 
+import { ModalContext } from "@/app/providers/ModalProvider";
 import { ThemeContext } from "@/app/providers/ThemeProvider";
 import { useAppDispatch } from "@/app/store";
 import { setWalletState } from "@/features/wallet/walletSlice";
 import type { Message } from "@/shared/config/Message";
-import type { Transaction } from "@/shared/lib/types";
+import type { ResponseSendMessage } from "@/shared/lib/types";
+
+type EthereumError = {
+  code?: number | string;
+  message?: string;
+  reason?: string;
+};
+
+const ERC20_APPROVE_ABI = [
+  "function approve(address spender, uint256 value) returns (bool)",
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
+  "function balanceOf(address owner) view returns (uint256)",
+];
 
 export const useTransaction = () => {
   const { theme } = useContext(ThemeContext);
+  const { closeModal } = useContext(ModalContext);
 
   const dispatch = useAppDispatch();
 
@@ -32,8 +48,39 @@ export const useTransaction = () => {
     return new ethers.JsonRpcProvider(RPC_URL);
   };
 
+  const getAmount = (response: string) => {
+    return response
+      .split("\n")
+      .find(arr => arr.includes("Сумма:"))
+      ?.split(": ")
+      .at(-1);
+  };
+
+  const getTokenDecimals = (tokenName: string) => {
+    switch (tokenName) {
+      case "gpyt":
+        return 18;
+      case "usdt":
+        return 6;
+      case "dai":
+        return 18;
+      case "pyusd":
+        return 6;
+      case "a7a5":
+        return 6;
+      case "eurc":
+        return 6;
+      case "brz":
+        return 4;
+      case "eurs":
+        return 2;
+      default:
+        return 18;
+    }
+  };
+
   const prepareAndSendTransaction = async (
-    transaction: Transaction,
+    { response, transaction, tokenAddress }: ResponseSendMessage,
     setAllMessages: Dispatch<SetStateAction<Message[]>>,
   ) => {
     try {
@@ -45,13 +92,57 @@ export const useTransaction = () => {
         );
       }
 
+      if (!transaction) {
+        return dispatch(
+          setWalletState({
+            error: "Транзакция не была совершена",
+          }),
+        );
+      }
+
+      if (!tokenAddress) {
+        return dispatch(
+          setWalletState({
+            error: "Адрес токена не указан",
+          }),
+        );
+      }
+
       const provider = getProvider();
-
       const browserProvider = provider as ethers.BrowserProvider;
-
       const signer = await browserProvider.getSigner();
 
+      const fromAddress = transaction.from || (await signer.getAddress());
+
+      const tokenContract = new ethers.Contract(tokenAddress, ERC20_APPROVE_ABI, signer);
+
+      const tempAmount = getAmount(response)?.split(" ");
+
+      if (!tempAmount?.[0] && !tempAmount?.[1]) {
+        return dispatch(
+          setWalletState({
+            error: "Сумма не указана",
+          }),
+        );
+      }
+
+      const amount = parseUnits(tempAmount[0], getTokenDecimals(tempAmount[1]));
       const to = transaction.to;
+      const currentAllownce: bigint = await tokenContract.allowance(fromAddress, transaction.to);
+
+      if (currentAllownce < amount) {
+        const tx = await tokenContract.approve(to, amount);
+        const receipt = await tx.wait();
+
+        if (receipt?.status !== 1) {
+          return dispatch(
+            setWalletState({
+              error: "Транзакция не прошла",
+            }),
+          );
+        }
+      }
+
       const data = transaction.data
         ? transaction.data.startsWith("0x")
           ? transaction.data
@@ -76,8 +167,6 @@ export const useTransaction = () => {
           },
         );
       }
-
-      const fromAddress = transaction.from || (await signer.getAddress());
 
       const nonce = transaction.nonce
         ? Number(transaction.nonce)
@@ -153,6 +242,7 @@ export const useTransaction = () => {
         {
           id: Number(Date.now()),
           role: "transaction",
+          isHidden: true,
           content: JSON.stringify({
             from: hrefSlicer(fromAddress),
             to: hrefSlicer(String(baseTx?.to ?? "")),
@@ -164,6 +254,25 @@ export const useTransaction = () => {
         },
       ]);
 
+      setTimeout(() => {
+        setAllMessages(prev => [
+          ...prev,
+          {
+            id: Number(Date.now()),
+            role: "transaction",
+            isHidden: true,
+            content: JSON.stringify({
+              from: hrefSlicer(fromAddress),
+              to: hrefSlicer(String(baseTx?.to ?? "")),
+            }),
+            sent_at: new Date(),
+            transaction: {
+              status: "processing",
+            },
+          },
+        ]);
+      }, 2000);
+
       const txResponse = await signer.sendTransaction(finalTx);
 
       setAllMessages(prev => {
@@ -172,6 +281,7 @@ export const useTransaction = () => {
           {
             id: Number(Date.now()),
             role: "transaction",
+            isHidden: true,
             content: JSON.stringify({
               from: hrefSlicer(fromAddress),
               to: hrefSlicer(String(baseTx?.to ?? "")),
@@ -205,7 +315,24 @@ export const useTransaction = () => {
     } catch (err) {
       console.error(err);
 
-      setAllMessages(prev => [...prev.slice(0, prev.length - 1)]);
+      const error = err as EthereumError;
+
+      closeModal();
+
+      if (error?.code === 4001 || error?.code === "ACTION_REJECTED" || error?.message?.includes("user rejected")) {
+        toast.info("Транзакция отклонена пользователем", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: theme === "dark" ? "dark" : "light",
+        });
+
+        return;
+      }
 
       toast.error("Произошла ошибка при создании транзакции", {
         position: "top-center",

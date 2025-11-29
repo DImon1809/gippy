@@ -4,6 +4,7 @@ export type Message = {
   content: string;
   sent_at: Date;
   isVoice?: boolean;
+  isHidden?: boolean;
   transaction?: {
     transactionId?: string;
     amount?: number;

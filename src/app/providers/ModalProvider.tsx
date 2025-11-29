@@ -6,6 +6,7 @@ import { ContactModal } from "@/entities/Modals/ContactModal";
 import { RegistrationModal } from "@/entities/Modals/RegistrationModal";
 import { SettingsModal } from "@/entities/Modals/SettingsModal";
 import { TariffsModal } from "@/entities/Modals/TariffsModal";
+import { TransactionPendingModal } from "@/entities/Modals/TransactionPendingModal";
 
 import styles from "./style.module.scss";
 
@@ -15,6 +16,7 @@ const modalsMap = {
   settings: SettingsModal,
   contact: ContactModal,
   register: RegistrationModal,
+  pending: TransactionPendingModal,
 };
 
 type ModalsType = keyof typeof modalsMap;
