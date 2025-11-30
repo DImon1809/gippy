@@ -13,6 +13,8 @@ import { useTransaction } from "@/shared/lib/hooks/useTransaction";
 import { useWallet2 } from "@/shared/lib/hooks/useWallet2";
 
 import { GippyThink } from "./ui/GippyThink";
+import { PendingBlock } from "./ui/PendingBlock";
+import { ProcessingTransaction } from "./ui/ProcessingTransaction";
 import { SimpleMessage } from "./ui/SimpleMessage";
 import { TransactionSuccessful } from "./ui/TransactionSuccessful";
 import { TypingMessage } from "./ui/TypingMessage";
@@ -184,7 +186,7 @@ export const AIMessenger = () => {
   useEffect(() => {
     const transaction = allMessages.at(-1)?.transaction;
 
-    if (transaction?.status && transaction?.status !== "failed" && transaction?.status !== "success") {
+    if (transaction?.status && (transaction?.status === "approve" || transaction?.status === "pending")) {
       openModal("pending", { transaction });
     }
   }, [allMessages]);
@@ -254,13 +256,32 @@ export const AIMessenger = () => {
         ) : (
           <div>
             {allMessages.map((message, index) => {
+              // return (
+              //   !message?.isHidden && (
+              //     <div
+              //       key={index}
+              //       className={`${styles.message__wrapper} ${message.role === "user" ? styles.user : styles.ai}`}
+              //     >
+              //       {message.role === "transaction" && message?.transaction?.status === "success" ? (
+              //         <TransactionSuccessful message={message} />
+              //       ) : (
+              //         <SimpleMessage message={message} />
+              //       )}
+              //     </div>
+              //   )
+              // );
+
               return (
                 !message?.isHidden && (
                   <div
                     key={index}
                     className={`${styles.message__wrapper} ${message.role === "user" ? styles.user : styles.ai}`}
                   >
-                    {message.role === "transaction" && message?.transaction?.status === "success" ? (
+                    {message.role === "transaction" && message?.transaction?.status === "pending" ? (
+                      <PendingBlock message={message} />
+                    ) : message.role === "transaction" && message?.transaction?.status === "processing" ? (
+                      <ProcessingTransaction message={message} />
+                    ) : message.role === "transaction" && message?.transaction?.status === "success" ? (
                       <TransactionSuccessful message={message} />
                     ) : (
                       <SimpleMessage message={message} />

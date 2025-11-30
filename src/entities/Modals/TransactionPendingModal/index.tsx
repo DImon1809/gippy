@@ -43,7 +43,7 @@ export const TransactionPendingModal = ({ transaction }: Props) => {
   const { closeModal } = useContext(ModalContext);
 
   useEffect(() => {
-    if (transaction?.status === "success" || transaction?.status === "failed") {
+    if (transaction?.status && transaction?.status !== "approve") {
       closeModal();
     }
   }, [transaction]);
@@ -52,24 +52,18 @@ export const TransactionPendingModal = ({ transaction }: Props) => {
     <div className={`${styles.transaction_modal} ${theme === "dark" ? styles.dark : ""}`}>
       <div className={styles.statuses__wrapper}>
         <div className={styles.status__wrapper}>
-          {transaction?.status === "pending" ? <Pending /> : <CheckLoad />}
+          {transaction?.status === "approve" ? <Pending /> : <CheckLoad />}
           <span
-            className={`${styles.status__label} ${theme === "dark" ? styles.dark : ""} ${transaction?.status !== "pending" ? styles.success : ""}`}
+            className={`${styles.status__label} ${theme === "dark" ? styles.dark : ""} ${transaction?.status === "pending" ? styles.success : ""}`}
           >
             Approve
           </span>
         </div>
         <ArrowRight size={21} color="#a9b1bb" />
         <div className={styles.status__wrapper}>
-          {transaction?.status === "processing" ? (
-            <Pending />
-          ) : transaction?.status === "pending" ? (
-            <TransactionStatic />
-          ) : (
-            <CheckLoad />
-          )}
+          {transaction?.status === "pending" ? <Pending /> : <TransactionStatic />}
           <span
-            className={`${styles.status__label} ${theme === "dark" ? styles.dark : ""} ${transaction?.status === "success" ? styles.success : ""}`}
+            className={`${styles.status__label} ${theme === "dark" ? styles.dark : ""} ${transaction?.status === "pending" ? styles.success : ""}`}
           >
             Перевод
           </span>

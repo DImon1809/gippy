@@ -130,18 +130,32 @@ export const useTransaction = () => {
       const to = transaction.to;
       const currentAllownce: bigint = await tokenContract.allowance(fromAddress, transaction.to);
 
-      if (currentAllownce < amount) {
-        const tx = await tokenContract.approve(to, amount);
-        const receipt = await tx.wait();
+      // if (currentAllownce < amount) {
+      setAllMessages(prev => [
+        ...prev,
+        {
+          id: Number(Date.now()),
+          role: "transaction",
+          isHidden: true,
+          content: "",
+          sent_at: new Date(),
+          transaction: {
+            status: "approve",
+          },
+        },
+      ]);
 
-        if (receipt?.status !== 1) {
-          return dispatch(
-            setWalletState({
-              error: "Транзакция не прошла",
-            }),
-          );
-        }
+      const tx = await tokenContract.approve(to, amount);
+      const receipt = await tx.wait();
+
+      if (receipt?.status !== 1) {
+        return dispatch(
+          setWalletState({
+            error: "Транзакция не прошла",
+          }),
+        );
       }
+      // }
 
       const data = transaction.data
         ? transaction.data.startsWith("0x")
@@ -242,7 +256,6 @@ export const useTransaction = () => {
         {
           id: Number(Date.now()),
           role: "transaction",
-          isHidden: true,
           content: JSON.stringify({
             from: hrefSlicer(fromAddress),
             to: hrefSlicer(String(baseTx?.to ?? "")),
@@ -254,24 +267,24 @@ export const useTransaction = () => {
         },
       ]);
 
-      setTimeout(() => {
-        setAllMessages(prev => [
-          ...prev,
-          {
-            id: Number(Date.now()),
-            role: "transaction",
-            isHidden: true,
-            content: JSON.stringify({
-              from: hrefSlicer(fromAddress),
-              to: hrefSlicer(String(baseTx?.to ?? "")),
-            }),
-            sent_at: new Date(),
-            transaction: {
-              status: "processing",
-            },
-          },
-        ]);
-      }, 2000);
+      // setTimeout(() => {
+      //   setAllMessages(prev => [
+      //     ...prev,
+      //     {
+      //       id: Number(Date.now()),
+      //       role: "transaction",
+      //       isHidden: true,
+      //       content: JSON.stringify({
+      //         from: hrefSlicer(fromAddress),
+      //         to: hrefSlicer(String(baseTx?.to ?? "")),
+      //       }),
+      //       sent_at: new Date(),
+      //       transaction: {
+      //         status: "processing",
+      //       },
+      //     },
+      //   ]);
+      // }, 2000);
 
       const txResponse = await signer.sendTransaction(finalTx);
 
@@ -281,7 +294,6 @@ export const useTransaction = () => {
           {
             id: Number(Date.now()),
             role: "transaction",
-            isHidden: true,
             content: JSON.stringify({
               from: hrefSlicer(fromAddress),
               to: hrefSlicer(String(baseTx?.to ?? "")),

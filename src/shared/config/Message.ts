@@ -9,6 +9,6 @@ export type Message = {
     transactionId?: string;
     amount?: number;
     recipient?: string;
-    status: "pending" | "processing" | "success" | "failed";
+    status: "approve" | "pending" | "processing" | "success" | "failed";
   };
 };
