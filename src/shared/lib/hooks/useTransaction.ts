@@ -140,6 +140,7 @@ export const useTransaction = () => {
           content: "",
           sent_at: new Date(),
           transaction: {
+            approveAmount: getAmount(response)?.toUpperCase(),
             status: "approve",
           },
         },
@@ -262,6 +263,7 @@ export const useTransaction = () => {
           }),
           sent_at: new Date(),
           transaction: {
+            approveAmount: getAmount(response)?.toUpperCase(),
             status: "pending",
           },
         },

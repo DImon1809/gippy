@@ -76,7 +76,7 @@ export const TransactionPendingModal = ({ transaction }: Props) => {
         <div className={`${styles.amount__wrapper} ${theme === "dark" ? styles.dark : ""}`}>
           <span
             className={`${styles.amount} ${theme === "dark" ? styles.dark : ""}`}
-          >{`${transaction?.amount || 1000} ${transaction?.recipient || "USDT"}`}</span>
+          >{`${transaction?.approveAmount || "1000 USDT"}`}</span>
         </div>
 
         <div className={styles.big__loader}>
@@ -85,7 +85,10 @@ export const TransactionPendingModal = ({ transaction }: Props) => {
 
         <div className={styles.info__wrapper}>
           <h4 className={`${styles.title} ${theme === "dark" ? styles.dark : ""}`}>Подтвердите перевод</h4>
-          <p className={styles.paragraph}>Откройте кошелёк и подтвердите основную транзакцию</p>
+          <p className={styles.paragraph}>
+            Откройте кошелёк и подтвердите транзакцию approve. Это позволит смарт-контракту перевести указаную сумму
+            токенов
+          </p>
         </div>
 
         <div className={styles.dot__loader}>
