@@ -4,7 +4,7 @@ import type { SiweMessage } from "@/shared/lib/types";
 
 export const userApi = createApi({
   reducerPath: "githubApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://gippy.ru/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://chat.gippy.ru/" }),
   refetchOnFocus: true,
   endpoints: builder => ({
     getCode: builder.query({

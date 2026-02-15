@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { RootType } from "@/app/store";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://gippy.ru/",
+  baseUrl: "https://chat.gippy.ru/",
   prepareHeaders: (headers, { getState }) => {
     const jwtToken = (getState() as RootType).userSlice.jwtToken || localStorage.getItem("jwtToken");
 
