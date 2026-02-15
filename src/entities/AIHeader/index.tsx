@@ -14,6 +14,7 @@ export const AIHeader = () => {
   const { openModal } = useContext(ModalContext);
 
   const { isHaveMessages } = useAppSelector(state => state.messageSlice);
+  const { isAuthorized } = useAppSelector(state => state.userSlice);
 
   return (
     <header
@@ -34,17 +35,19 @@ export const AIHeader = () => {
       </div>
 
       <div className={styles.buttons__wrapper}>
-        <div
-          className={`${styles.upgrade__button} ${theme === "dark" ? styles.dark : ""}`}
-          onClick={() => {
-            openModal("tariffs");
-          }}
-        >
-          <Crown size={16} />
-          <div className={styles.text__button__wrapper}>
-            <span className={styles.text__button}>Upgrade</span>
+        {isAuthorized && (
+          <div
+            className={`${styles.upgrade__button} ${theme === "dark" ? styles.dark : ""}`}
+            onClick={() => {
+              openModal("tariffs");
+            }}
+          >
+            <Crown size={16} />
+            <div className={styles.text__button__wrapper}>
+              <span className={styles.text__button}>Upgrade</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {isHaveMessages && (
           <Button

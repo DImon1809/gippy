@@ -1,11 +1,21 @@
-FROM node:alpine
+FROM node:alpine AS builder
 
 WORKDIR /app
 
+COPY package.json package-lock.json ./
+
+RUN npm ci --include=dev
+
 COPY . .
 
-RUN npm install
+RUN npm install --save-dev @types/node
 
-EXPOSE 5173
+RUN npm run build 
+    
+FROM nginx:alpine
 
-CMD [ "npm", "run", "dev" ]
+COPY --from=builder /app/dist /usr/share/nginx/html 
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
