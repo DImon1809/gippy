@@ -57,7 +57,7 @@ export const useTransaction = () => {
   };
 
   const getTokenDecimals = (tokenName: string) => {
-    switch (tokenName) {
+    switch (tokenName.toLowerCase()) {
       case "gpyt":
         return 18;
       case "usdt":
@@ -114,6 +114,7 @@ export const useTransaction = () => {
 
       const fromAddress = transaction.from || (await signer.getAddress());
 
+      // Контракт токена (НЕ ПРОКСИ)
       const tokenContract = new ethers.Contract(tokenAddress, ERC20_APPROVE_ABI, signer);
 
       const tempAmount = getAmount(response)?.split(" ");
@@ -126,11 +127,24 @@ export const useTransaction = () => {
         );
       }
 
-      const amount = parseUnits(tempAmount[0], getTokenDecimals(tempAmount[1]));
-      const to = transaction.to;
-      const currentAllownce: bigint = await tokenContract.allowance(fromAddress, transaction.to);
+      const tokenName = tempAmount[1].toLowerCase();
+      const amount = parseUnits(tempAmount[0], getTokenDecimals(tokenName));
 
-      // if (currentAllownce < amount) {
+      // Прокси-контракт, которому нужно разрешение
+      const spender = transaction.to;
+
+      // Получаем allowance у ТОКЕНА для ПРОКСИ
+      let currentAllowance: bigint;
+      try {
+        currentAllowance = await tokenContract.allowance(fromAddress, spender);
+        console.log("Текущий allowance:", currentAllowance.toString());
+      } catch (error) {
+        console.warn("Не удалось получить allowance, устанавливаем 0:", error);
+        currentAllowance = 0n;
+      }
+
+      // Если allowance недостаточно, делаем approve для прокси
+      // if (currentAllowance < amount) {
       setAllMessages(prev => [
         ...prev,
         {
@@ -146,18 +160,23 @@ export const useTransaction = () => {
         },
       ]);
 
-      const tx = await tokenContract.approve(to, amount);
+      console.log("Делаем approve для прокси:", spender, "сумма:", amount.toString());
+
+      const tx = await tokenContract.approve(spender, amount);
       const receipt = await tx.wait();
 
       if (receipt?.status !== 1) {
         return dispatch(
           setWalletState({
-            error: "Транзакция не прошла",
+            error: "Транзакция approve не прошла",
           }),
         );
       }
+
+      // console.log("Approve успешно выполнен");
       // }
 
+      // Основная транзакция к прокси
       const data = transaction.data
         ? transaction.data.startsWith("0x")
           ? transaction.data
@@ -195,7 +214,7 @@ export const useTransaction = () => {
         : undefined;
 
       const baseTx: ethers.TransactionRequest = {
-        to,
+        to: spender,
         data,
         value,
         nonce,
@@ -221,6 +240,7 @@ export const useTransaction = () => {
         });
       }
 
+      console.log("feeData", feeData);
       if (userGasPrice) {
         baseTx.gasPrice = userGasPrice;
       } else if (feeData.gasPrice) {
@@ -236,13 +256,15 @@ export const useTransaction = () => {
         gasLimit = typeof transaction.gas === "string" ? BigInt(transaction.gas) : BigInt(transaction.gas);
       } else {
         try {
-          gasLimit = await browserProvider.estimateGas({
-            ...baseTx,
-            from: fromAddress,
-          });
+          gasLimit =
+            ((await browserProvider.estimateGas({
+              ...baseTx,
+              from: fromAddress,
+            })) *
+              120n) /
+            100n;
         } catch (estErr) {
           console.warn("estimateGas не удалось, продолжаем без явного gasLimit:", estErr);
-
           gasLimit = BigInt(200000);
         }
       }
@@ -268,25 +290,6 @@ export const useTransaction = () => {
           },
         },
       ]);
-
-      // setTimeout(() => {
-      //   setAllMessages(prev => [
-      //     ...prev,
-      //     {
-      //       id: Number(Date.now()),
-      //       role: "transaction",
-      //       isHidden: true,
-      //       content: JSON.stringify({
-      //         from: hrefSlicer(fromAddress),
-      //         to: hrefSlicer(String(baseTx?.to ?? "")),
-      //       }),
-      //       sent_at: new Date(),
-      //       transaction: {
-      //         status: "processing",
-      //       },
-      //     },
-      //   ]);
-      // }, 2000);
 
       const txResponse = await signer.sendTransaction(finalTx);
 
